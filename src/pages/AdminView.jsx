@@ -201,6 +201,15 @@ export default function AdminView() {
     const tasks = await base44.entities.Task.list();
     await Promise.all(tasks.map(t => base44.entities.Task.delete(t.id)));
     setShowResetModal(false);
+    setSuccessMessage("All Cards Deleted");
+    setShowSuccessModal(true);
+  };
+
+  const handleClearAuditLog = async () => {
+    const logs = await base44.entities.AuditLog.list();
+    await Promise.all(logs.map(l => base44.entities.AuditLog.delete(l.id)));
+    setShowClearAuditModal(false);
+    setSuccessMessage("Audit Log Cleared");
     setShowSuccessModal(true);
   };
 
