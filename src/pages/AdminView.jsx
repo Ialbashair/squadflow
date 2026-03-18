@@ -199,6 +199,7 @@ export default function AdminView() {
     const tasks = await base44.entities.Task.list();
     await Promise.all(tasks.map(t => base44.entities.Task.delete(t.id)));
     setShowResetModal(false);
+    setShowSuccessModal(true);
   };
 
   const handleSave = async (user) => {
