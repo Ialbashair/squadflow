@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, AlertTriangle, ShieldCheck, ArrowRight, Plus, Pencil, Trash2, MoveRight } from "lucide-react";
-import { formatDistanceToNow, format } from "date-fns";
+import { Loader2, AlertTriangle, ShieldCheck, ArrowRight, Plus, Pencil, Trash2, MoveRight, X } from "lucide-react";
+import { formatDistanceToNow, format, isWithinInterval, startOfDay, endOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 const STATUS_LABELS = {
   backlog: "Backlog",
