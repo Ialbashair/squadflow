@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
-import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings } from "lucide-react";
 
 const navItems = [
   { label: "Kanban Board", icon: LayoutDashboard, page: "KanbanBoard" },
