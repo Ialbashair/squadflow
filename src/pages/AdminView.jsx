@@ -162,7 +162,9 @@ export default function AdminView() {
   const [notAdmin, setNotAdmin] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showClearAuditModal, setShowClearAuditModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("All Cards Deleted");
 
   const isPreview = window.location.hostname.includes("base44.com") && window.location.hostname.includes("preview");
   const publishedOrigin = isPreview ? "" : window.location.origin;
