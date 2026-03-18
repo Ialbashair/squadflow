@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/header/Header";
 import WorkflowStatsBar from "@/components/stats/WorkflowStatsBar";
@@ -9,6 +10,7 @@ import { logTaskMoved } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
 export default function KanbanBoardPage() {
+  const { getEffectiveUser } = useAuth();
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminOnly, setIsAdminOnly] = useState(false);
@@ -19,11 +21,12 @@ export default function KanbanBoardPage() {
   useEffect(() => {
     base44.auth.me().then(u => {
       setCurrentUser(u);
-      const role = u?.role;
+      const effectiveUser = getEffectiveUser();
+      const role = effectiveUser?.role;
       setIsAdmin(role === "admin" || role === "team_lead");
       setIsAdminOnly(role === "admin");
     }).catch(() => {});
-  }, []);
+  }, [getEffectiveUser]);
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
