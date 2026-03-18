@@ -30,7 +30,7 @@ const priorityConfig = {
   low:    { icon: ArrowDown,     label: "Low",    color: "text-slate-400",  dot: "bg-slate-400" },
 };
 
-function WorkflowCard({ task, provided, isDragging, onClick }) {
+function WorkflowCard({ task, provided, isDragging, onClick, isAdmin }) {
   const type = typeConfig[task.type] || typeConfig.task;
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const TypeIcon = type.icon;
@@ -49,7 +49,8 @@ function WorkflowCard({ task, provided, isDragging, onClick }) {
       className={cn(
         "relative rounded-xl border border-white/[0.06] mb-2",
         "bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm",
-        "hover:border-white/[0.12] transition-all duration-200 cursor-grab active:cursor-grabbing",
+        "hover:border-white/[0.12] transition-all duration-200",
+        isAdmin ? "cursor-grab active:cursor-grabbing" : "cursor-pointer",
         isDragging && "shadow-2xl shadow-violet-500/10 border-violet-500/30 scale-[1.02] rotate-1"
       )}
     >
@@ -154,7 +155,7 @@ export default function WorkflowBoard({ tasks, onDragEnd, isAdmin }) {
                       {grouped[col.id].map((task, index) => (
                         <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                           {(provided, snapshot) => (
-                            <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} onClick={setSelectedTask} />
+                            <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} onClick={setSelectedTask} isAdmin={isAdmin} />
                           )}
                         </Draggable>
                       ))}
