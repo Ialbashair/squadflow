@@ -11,6 +11,7 @@ export default function KanbanBoardPage() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminOnly, setIsAdminOnly] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
