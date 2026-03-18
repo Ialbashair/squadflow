@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
-import { Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check, Trash2 } from "lucide-react";
+import { Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function generateCode() {
@@ -153,6 +154,7 @@ function RoleDropdown({ value, onChange }) {
 }
 
 export default function AdminView() {
+  const { roleOverride, setRoleOverride } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState({});
@@ -165,7 +167,7 @@ export default function AdminView() {
   const [showClearAuditModal, setShowClearAuditModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("All Cards Deleted");
-  const [viewAsRole, setViewAsRole] = useState(null);
+  const [viewAsRole, setViewAsRole] = useState(roleOverride);
 
   const isPreview = window.location.hostname.includes("base44.com") && window.location.hostname.includes("preview");
   const publishedOrigin = isPreview ? "" : window.location.origin;
@@ -425,7 +427,11 @@ export default function AdminView() {
           {ROLES.map(r => (
             <button
               key={r.value}
-              onClick={() => setViewAsRole(viewAsRole === r.value ? null : r.value)}
+              onClick={() => {
+                const newRole = viewAsRole === r.value ? null : r.value;
+                setViewAsRole(newRole);
+                setRoleOverride(newRole);
+              }}
               className={cn(
                 "p-4 rounded-xl border-2 transition-all text-left",
                 viewAsRole === r.value
