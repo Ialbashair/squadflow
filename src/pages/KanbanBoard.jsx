@@ -53,7 +53,7 @@ export default function KanbanBoardPage() {
         onSync={handleSync}
         isSyncing={isSyncing}
       />
-      <StatsBar tasks={tasks} />
+      <WorkflowStatsBar tasks={tasks} />
       <WorkflowBoard tasks={tasks} onDragEnd={handleDragEnd} />
     </div>
   );
