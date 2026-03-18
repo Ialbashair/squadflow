@@ -165,6 +165,7 @@ export default function AdminView() {
   const [showClearAuditModal, setShowClearAuditModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("All Cards Deleted");
+  const [viewAsRole, setViewAsRole] = useState(null);
 
   const isPreview = window.location.hostname.includes("base44.com") && window.location.hostname.includes("preview");
   const publishedOrigin = isPreview ? "" : window.location.origin;
@@ -410,6 +411,69 @@ export default function AdminView() {
         })}
         {filtered.length === 0 && (
           <div className="text-center py-12 text-white/20 text-sm">No users found</div>
+        )}
+      </div>
+
+      {/* View As Role */}
+      <div className="mb-10 p-4 rounded-2xl bg-violet-500/[0.06] border border-violet-500/20">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 rounded-lg bg-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-300">👁️</div>
+          <span className="text-sm font-semibold text-violet-300">View As Role</span>
+        </div>
+        <p className="text-xs text-white/40 mb-4">See what the app looks and feels like for different roles:</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {ROLES.map(r => (
+            <button
+              key={r.value}
+              onClick={() => setViewAsRole(viewAsRole === r.value ? null : r.value)}
+              className={cn(
+                "p-4 rounded-xl border-2 transition-all text-left",
+                viewAsRole === r.value
+                  ? `${r.bg} border-current scale-105`
+                  : "bg-white/[0.02] border-white/[0.1] hover:border-white/[0.15]"
+              )}
+            >
+              <div className={cn("text-xs font-bold mb-1", r.color)}>{r.label}</div>
+              <div className="text-[11px] text-white/40">{r.description}</div>
+              {viewAsRole === r.value && (
+                <div className="mt-3 pt-3 border-t border-current/20 text-[10px] text-white/50">
+                  ✓ Viewing as {r.label}
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+        {viewAsRole && (
+          <div className="mt-4 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+            <div className="text-xs text-white/60 mb-2 font-medium">Permissions for {RoleConfig(viewAsRole).label}:</div>
+            <ul className="text-[11px] text-white/40 space-y-1">
+              {viewAsRole === "admin" && (
+                <>
+                  <li>✓ Full access to all features</li>
+                  <li>✓ Can manage users and roles</li>
+                  <li>✓ Can sync with Slack</li>
+                  <li>✓ Can view and clear audit logs</li>
+                  <li>✓ Can reset all cards</li>
+                </>
+              )}
+              {viewAsRole === "team_lead" && (
+                <>
+                  <li>✓ Can move and edit cards on Kanban</li>
+                  <li>✓ Can view audit log</li>
+                  <li>✓ Cannot access Admin View</li>
+                  <li>✓ Cannot sync with Slack</li>
+                </>
+              )}
+              {viewAsRole === "user" && (
+                <>
+                  <li>✓ Can move cards on Kanban board</li>
+                  <li>✓ Cards assigned to themselves only</li>
+                  <li>✓ Cannot create or delete cards</li>
+                  <li>✓ Cannot access Admin View</li>
+                </>
+              )}
+            </ul>
+          </div>
         )}
       </div>
 
