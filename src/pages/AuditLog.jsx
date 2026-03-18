@@ -95,6 +95,10 @@ export default function AuditLogPage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [notAuthorized, setNotAuthorized] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userFilter, setUserFilter] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -108,9 +112,35 @@ export default function AuditLogPage() {
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ["audit-logs"],
-    queryFn: () => base44.entities.AuditLog.list("-created_date", 200),
+    queryFn: () => base44.entities.AuditLog.list("-created_date", 500),
     enabled: !notAuthorized && !loadingUser,
   });
+
+  const filteredLogs = useMemo(() => {
+    return logs.filter(log => {
+      // Search by card name or description
+      if (searchQuery && !log.task_title.toLowerCase().includes(searchQuery.toLowerCase()) && !log.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return false;
+      }
+      // Filter by user
+      if (userFilter && !log.user_name.toLowerCase().includes(userFilter.toLowerCase())) {
+        return false;
+      }
+      // Filter by date range
+      if ((dateFrom || dateTo) && log.created_date) {
+        const logDate = new Date(log.created_date);
+        if (dateFrom) {
+          const fromDate = startOfDay(new Date(dateFrom));
+          if (logDate < fromDate) return false;
+        }
+        if (dateTo) {
+          const toDate = endOfDay(new Date(dateTo));
+          if (logDate > toDate) return false;
+        }
+      }
+      return true;
+    });
+  }, [logs, searchQuery, userFilter, dateFrom, dateTo]);
 
   if (loadingUser || isLoading) {
     return (
