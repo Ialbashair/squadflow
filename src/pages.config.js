@@ -48,10 +48,12 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import KanbanBoard from './pages/KanbanBoard';
+import SlackInbox from './pages/SlackInbox';
 
 
 export const PAGES = {
     "KanbanBoard": KanbanBoard,
+    "SlackInbox": SlackInbox,
 }
 
 export const pagesConfig = {
