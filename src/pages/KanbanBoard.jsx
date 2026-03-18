@@ -25,10 +25,10 @@ export default function KanbanBoardPage() {
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    const newStatus = destination.droppableId;
+    const newType = destination.droppableId;
     updateMutation.mutate({
       id: draggableId,
-      data: { status: newStatus, order: destination.index },
+      data: { type: newType, order: destination.index },
     });
   };
 

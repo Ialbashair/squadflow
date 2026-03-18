@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 import KanbanCard from "./KanbanCard";
 
 const columnConfig = {
-  todo: { label: "To Do", accent: "bg-violet-500", glow: "shadow-violet-500/20" },
-  in_progress: { label: "In Progress", accent: "bg-blue-500", glow: "shadow-blue-500/20" },
-  done: { label: "Done", accent: "bg-emerald-500", glow: "shadow-emerald-500/20" },
+  task: { label: "Tasks", accent: "bg-blue-500", glow: "shadow-blue-500/20" },
+  bug: { label: "Bugs", accent: "bg-amber-500", glow: "shadow-amber-500/20" },
+  idea: { label: "Ideas", accent: "bg-emerald-500", glow: "shadow-emerald-500/20" },
+  feature: { label: "Features", accent: "bg-violet-500", glow: "shadow-violet-500/20" },
 };
 
 export default function KanbanColumn({ columnId, tasks }) {
