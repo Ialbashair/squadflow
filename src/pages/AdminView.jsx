@@ -194,6 +194,12 @@ export default function AdminView() {
     setPendingRoles(prev => ({ ...prev, [userId]: role }));
   };
 
+  const handleResetAllCards = async () => {
+    const tasks = await base44.entities.Task.list();
+    await Promise.all(tasks.map(t => base44.entities.Task.delete(t.id)));
+    setShowResetModal(false);
+  };
+
   const handleSave = async (user) => {
     const newRole = pendingRoles[user.id];
     if (!newRole) return;
