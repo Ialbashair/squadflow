@@ -83,7 +83,7 @@ function LogEntry({ log }) {
         </p>
         {date && (
           <p className="text-[10px] text-white/15 mt-0.5">
-            {format(date, "MMM d, h:mm a zzz")}
+            {format(date, "MMM d, h:mm a")}
           </p>
         )}
       </div>
