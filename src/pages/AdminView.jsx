@@ -104,7 +104,7 @@ export default function AdminView() {
   useEffect(() => {
     base44.auth.me().then(me => {
       setCurrentUser(me);
-      if (me?.role !== "admin") {
+      if (me?.role !== "admin" && me?.role !== "team_lead") {
         setNotAdmin(true);
         setLoading(false);
         return;
