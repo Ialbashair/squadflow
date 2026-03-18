@@ -108,7 +108,7 @@ function WorkflowCard({ task, provided, isDragging, onClick, isAdmin }) {
   );
 }
 
-export default function WorkflowBoard({ tasks, onDragEnd, isAdmin }) {
+export default function WorkflowBoard({ tasks, onDragEnd, isAdmin, canDrag = false }) {
   const [selectedTask, setSelectedTask] = useState(null);
 
   const grouped = COLUMNS.reduce((acc, col) => {
@@ -127,7 +127,7 @@ export default function WorkflowBoard({ tasks, onDragEnd, isAdmin }) {
           isAdmin={isAdmin}
         />
       )}
-      <DragDropContext onDragEnd={isAdmin ? onDragEnd : () => {}}>
+      <DragDropContext onDragEnd={(isAdmin || canDrag) ? onDragEnd : () => {}}>
         <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
           {COLUMNS.map(col => {
             const ColIcon = col.icon;
