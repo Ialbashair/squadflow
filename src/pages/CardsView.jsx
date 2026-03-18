@@ -3,10 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/header/Header";
 import StatsBar from "@/components/stats/StatsBar";
-import WorkflowBoard from "@/components/kanban/WorkflowBoard";
+import KanbanBoard from "@/components/kanban/KanbanBoard";
 import { Loader2 } from "lucide-react";
 
-export default function KanbanBoardPage() {
+export default function CardsView() {
   const [isSyncing, setIsSyncing] = useState(false);
   const queryClient = useQueryClient();
 
@@ -26,7 +26,7 @@ export default function KanbanBoardPage() {
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
     updateMutation.mutate({
       id: draggableId,
-      data: { status: destination.droppableId, order: destination.index },
+      data: { type: destination.droppableId, order: destination.index },
     });
   };
 
@@ -48,13 +48,13 @@ export default function KanbanBoardPage() {
   return (
     <div>
       <Header
-        title="Kanban Board"
+        title="Cards View"
         subtitle={`${tasks.length} items from Slack`}
         onSync={handleSync}
         isSyncing={isSyncing}
       />
       <StatsBar tasks={tasks} />
-      <WorkflowBoard tasks={tasks} onDragEnd={handleDragEnd} />
+      <KanbanBoard tasks={tasks} onDragEnd={handleDragEnd} />
     </div>
   );
 }
