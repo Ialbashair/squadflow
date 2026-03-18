@@ -30,7 +30,7 @@ const priorityConfig = {
   low:    { icon: ArrowDown,     label: "Low",    color: "text-slate-400",  dot: "bg-slate-400" },
 };
 
-function WorkflowCard({ task, provided, isDragging }) {
+function WorkflowCard({ task, provided, isDragging, onClick }) {
   const type = typeConfig[task.type] || typeConfig.task;
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const TypeIcon = type.icon;
