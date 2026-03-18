@@ -45,6 +45,7 @@ export default function KanbanColumn({ columnId, tasks, onCardClick }) {
                     task={task}
                     provided={provided}
                     isDragging={snapshot.isDragging}
+                    onClick={onCardClick}
                   />
                 )}
               </Draggable>
