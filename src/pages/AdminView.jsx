@@ -161,6 +161,7 @@ export default function AdminView() {
   const [currentUser, setCurrentUser] = useState(null);
   const [notAdmin, setNotAdmin] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const isPreview = window.location.hostname.includes("base44.com") && window.location.hostname.includes("preview");
   const publishedOrigin = isPreview ? "" : window.location.origin;
