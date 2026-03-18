@@ -10,7 +10,7 @@ const columnConfig = {
   feature: { label: "Features", accent: "bg-violet-500", glow: "shadow-violet-500/20" },
 };
 
-export default function KanbanColumn({ columnId, tasks }) {
+export default function KanbanColumn({ columnId, tasks, onCardClick }) {
   const config = columnConfig[columnId] || columnConfig.todo;
 
   return (
