@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { channel_id, limit = 50 } = await req.json();
+    const { channel_id, limit = 30 } = await req.json();
     if (!channel_id) return Response.json({ error: 'channel_id is required' }, { status: 400 });
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('slack');
@@ -41,44 +41,64 @@ Deno.serve(async (req) => {
       return userCache[userId];
     };
 
-    // Use AI to categorize messages into tasks
+    // Filter meaningful messages
     const meaningfulMessages = messages.filter(m => m.type === 'message' && !m.subtype && m.text && m.text.length > 10);
 
-    let createdCount = 0;
-    for (const msg of meaningfulMessages) {
-      const authorInfo = msg.user ? await getUserInfo(msg.user) : null;
+    if (meaningfulMessages.length === 0) {
+      return Response.json({ success: true, processed: 0, created: 0 });
+    }
 
-      const aiResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `Analyze this Slack message and extract a task from it. Return a JSON object.
-Message: "${msg.text}"
+    // Batch all messages into a single LLM call
+    const messagesJson = meaningfulMessages.map((m, i) => `[${i}] ${m.text}`).join('\n\n');
 
-Return:
+    const aiResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: `Analyze these Slack messages and identify which ones are actionable (tasks, bugs, feature requests, ideas). For each actionable message, extract a task.
+
+Messages:
+${messagesJson}
+
+Return a JSON object with a "tasks" array. Only include actionable messages — skip casual conversation.
+Each task object:
 {
-  "title": "short action-oriented task title (max 10 words)",
+  "index": <message index number>,
+  "title": "short action-oriented title (max 10 words)",
   "type": "task" | "bug" | "idea" | "feature",
-  "priority": "low" | "medium" | "high" | "urgent",
-  "is_actionable": true | false
-}
-
-Only mark is_actionable=true if the message clearly describes something that needs to be done, a bug, or a feature request. Casual conversation should be false.`,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            title: { type: 'string' },
-            type: { type: 'string' },
-            priority: { type: 'string' },
-            is_actionable: { type: 'boolean' }
+  "priority": "low" | "medium" | "high" | "urgent"
+}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          tasks: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                index: { type: 'number' },
+                title: { type: 'string' },
+                type: { type: 'string' },
+                priority: { type: 'string' }
+              }
+            }
           }
         }
-      });
+      }
+    });
 
-      if (!aiResult.is_actionable) continue;
+    const extractedTasks = aiResult?.tasks || [];
+
+    // Fetch author info and create tasks
+    let createdCount = 0;
+    for (const task of extractedTasks) {
+      const msg = meaningfulMessages[task.index];
+      if (!msg) continue;
+
+      const authorInfo = msg.user ? await getUserInfo(msg.user) : null;
 
       await base44.asServiceRole.entities.Task.create({
-        title: aiResult.title,
+        title: task.title,
         description: msg.text,
-        type: aiResult.type || 'task',
-        priority: aiResult.priority || 'medium',
+        type: task.type || 'task',
+        priority: task.priority || 'medium',
         status: 'backlog',
         slack_channel: channel_id,
         slack_author: authorInfo?.name || msg.username || 'Unknown',
