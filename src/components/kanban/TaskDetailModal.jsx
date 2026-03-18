@@ -49,7 +49,7 @@ function getMockMessage(task) {
   return mockMessages[channel] || mockMessages.default;
 }
 
-export default function TaskDetailModal({ task, onClose, onSaved }) {
+export default function TaskDetailModal({ task, onClose, onSaved, isAdmin = true }) {
   const [title, setTitle] = useState(task.title || "");
   const [description, setDescription] = useState(task.description || "");
   const [status, setStatus] = useState(task.status || "backlog");
@@ -125,7 +125,8 @@ export default function TaskDetailModal({ task, onClose, onSaved }) {
               value={title}
               onChange={handleChange(setTitle)}
               rows={2}
-              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm text-white/90 placeholder:text-white/20 outline-none focus:border-violet-500/50 focus:bg-violet-500/[0.03] resize-none transition-colors"
+              disabled={!isAdmin}
+              className={cn("w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm text-white/90 placeholder:text-white/20 outline-none resize-none transition-colors", isAdmin && "focus:border-violet-500/50 focus:bg-violet-500/[0.03]", !isAdmin && "cursor-default opacity-70")}
             />
           </div>
 
@@ -137,7 +138,8 @@ export default function TaskDetailModal({ task, onClose, onSaved }) {
               onChange={handleChange(setDescription)}
               rows={3}
               placeholder="Add a description…"
-              className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm text-white/50 placeholder:text-white/20 outline-none focus:border-violet-500/50 focus:bg-violet-500/[0.03] resize-none transition-colors"
+              disabled={!isAdmin}
+              className={cn("w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm text-white/50 placeholder:text-white/20 outline-none resize-none transition-colors", isAdmin && "focus:border-violet-500/50 focus:bg-violet-500/[0.03]", !isAdmin && "cursor-default opacity-70")}
             />
           </div>
 
@@ -151,7 +153,8 @@ export default function TaskDetailModal({ task, onClose, onSaved }) {
                 return (
                   <button
                     key={s.id}
-                    onClick={() => handleStatusChange(s.id)}
+                    onClick={() => isAdmin && handleStatusChange(s.id)}
+                    disabled={!isAdmin}
                     className={cn(
                       "flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all",
                       isActive ? s.active : cn("border-white/[0.06] text-white/30 hover:text-white/50 hover:border-white/[0.12]")
