@@ -168,18 +168,32 @@ export default function AdminView() {
           <Link className="w-4 h-4 text-violet-400" />
           <span className="text-sm font-semibold text-violet-300">Invite Link</span>
         </div>
-        <p className="text-xs text-white/40 mb-3">Share this link with anyone to invite them to the app. New users join as Team Members by default.</p>
+        <p className="text-xs text-white/40 mb-3">Share this link with anyone to invite them to the app. New users join as Team Members by default — you can promote them here.</p>
+        {isPreview && (
+          <div className="mb-2">
+            <input
+              value={inviteBase}
+              onChange={e => setInviteBase(e.target.value)}
+              placeholder="Enter your published URL, e.g. https://yourapp.base44.app"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/70 font-mono outline-none focus:border-violet-500/50 transition-colors placeholder:text-white/20"
+            />
+            <p className="text-[10px] text-white/25 mt-1">You're in the editor — paste your published app URL above (found in Dashboard → Domains).</p>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <div className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/50 font-mono truncate">
-            {inviteLink}
+            {inviteLink || <span className="text-white/20 italic">Enter URL above</span>}
           </div>
           <button
             onClick={copyInviteLink}
+            disabled={!inviteLink}
             className={cn(
               "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all flex-shrink-0",
               copied
                 ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                : "bg-violet-500/20 text-violet-300 border border-violet-500/30 hover:bg-violet-500/30"
+                : inviteLink
+                  ? "bg-violet-500/20 text-violet-300 border border-violet-500/30 hover:bg-violet-500/30"
+                  : "bg-white/[0.03] text-white/20 border border-white/[0.06] cursor-not-allowed"
             )}
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
