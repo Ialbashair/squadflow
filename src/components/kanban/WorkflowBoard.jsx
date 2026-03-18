@@ -118,64 +118,62 @@ export default function WorkflowBoard({ tasks, onDragEnd }) {
   }, {});
 
   return (
-    <>
-    {selectedTask && (
-      <TaskDetailModal
-        task={selectedTask}
-        onClose={() => setSelectedTask(null)}
-      />
-    )}
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
-        {COLUMNS.map(col => {
-          const ColIcon = col.icon;
-          return (
-            <div key={col.id} className="flex flex-col w-full md:min-w-[280px] md:max-w-[340px] md:flex-1">
-              {/* Column header */}
-              <div className="flex items-center gap-3 mb-4 px-1">
-                <div className={cn("w-2.5 h-2.5 rounded-full shadow-lg", col.accent, col.glow)} />
-                <ColIcon className={cn("w-4 h-4", col.color)} />
-                <h3 className="text-sm font-semibold text-white/70 tracking-wide uppercase">{col.label}</h3>
-                <span className="ml-auto text-xs font-mono text-white/20 bg-white/[0.04] px-2 py-0.5 rounded-full">
-                  {grouped[col.id].length}
-                </span>
-              </div>
-
-              <Droppable droppableId={col.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={cn(
-                      "flex-1 rounded-2xl p-3 min-h-[200px] transition-colors duration-200",
-                      "bg-white/[0.02] border border-white/[0.04]",
-                      snapshot.isDraggingOver && "bg-violet-500/[0.04] border-violet-500/20"
-                    )}
-                  >
-                    {grouped[col.id].map((task, index) => (
-                      <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-                        {(provided, snapshot) => (
-                          <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} onClick={setSelectedTask} />
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                    {grouped[col.id].length === 0 && !snapshot.isDraggingOver && (
-                      <div className="flex flex-col items-center justify-center py-12 text-white/10">
-                        <div className="w-10 h-10 rounded-xl border-2 border-dashed border-current flex items-center justify-center mb-3">
-                          <span className="text-lg">+</span>
+    <div>
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
+          {COLUMNS.map(col => {
+            const ColIcon = col.icon;
+            return (
+              <div key={col.id} className="flex flex-col w-full md:min-w-[280px] md:max-w-[340px] md:flex-1">
+                <div className="flex items-center gap-3 mb-4 px-1">
+                  <div className={cn("w-2.5 h-2.5 rounded-full shadow-lg", col.accent, col.glow)} />
+                  <ColIcon className={cn("w-4 h-4", col.color)} />
+                  <h3 className="text-sm font-semibold text-white/70 tracking-wide uppercase">{col.label}</h3>
+                  <span className="ml-auto text-xs font-mono text-white/20 bg-white/[0.04] px-2 py-0.5 rounded-full">
+                    {grouped[col.id].length}
+                  </span>
+                </div>
+                <Droppable droppableId={col.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={cn(
+                        "flex-1 rounded-2xl p-3 min-h-[200px] transition-colors duration-200",
+                        "bg-white/[0.02] border border-white/[0.04]",
+                        snapshot.isDraggingOver && "bg-violet-500/[0.04] border-violet-500/20"
+                      )}
+                    >
+                      {grouped[col.id].map((task, index) => (
+                        <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                          {(provided, snapshot) => (
+                            <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} onClick={setSelectedTask} />
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                      {grouped[col.id].length === 0 && !snapshot.isDraggingOver && (
+                        <div className="flex flex-col items-center justify-center py-12 text-white/10">
+                          <div className="w-10 h-10 rounded-xl border-2 border-dashed border-current flex items-center justify-center mb-3">
+                            <span className="text-lg">+</span>
+                          </div>
+                          <p className="text-xs">Drop items here</p>
                         </div>
-                        <p className="text-xs">Drop items here</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          );
-        })}
-      </div>
-    </DragDropContext>
-    </>
+                      )}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            );
+          })}
+        </div>
+      </DragDropContext>
+    </div>
   );
 }
