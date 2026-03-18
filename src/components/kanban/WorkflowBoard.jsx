@@ -45,6 +45,7 @@ function WorkflowCard({ task, provided, isDragging, onClick }) {
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
+      onClick={() => !isDragging && onClick(task)}
       className={cn(
         "relative rounded-xl border border-white/[0.06] mb-2",
         "bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm",
