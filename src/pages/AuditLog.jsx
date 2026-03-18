@@ -39,6 +39,7 @@ function LogEntry({ log }) {
   const action = ACTION_CONFIG[log.action_type] || ACTION_CONFIG.updated;
   const role = ROLE_CONFIG[log.user_role] || ROLE_CONFIG.user;
   const ActionIcon = action.icon;
+  // Parse the UTC date from created_date and display in local timezone
   const date = log.created_date ? new Date(log.created_date) : null;
 
   return (
