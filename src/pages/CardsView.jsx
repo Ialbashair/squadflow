@@ -37,10 +37,14 @@ export default function CardsView() {
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    const task = tasks.find(t => String(t.id) === draggableId);
     updateMutation.mutate({
       id: draggableId,
       data: { type: destination.droppableId, order: destination.index },
     });
+    if (task && destination.droppableId !== source.droppableId) {
+      logTaskTypeChanged({ task, fromType: source.droppableId, toType: destination.droppableId, user: currentUser });
+    }
   };
 
   const handleSync = () => {
