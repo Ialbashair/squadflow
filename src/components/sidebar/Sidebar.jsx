@@ -20,6 +20,7 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
   }, []);
 
   const isAdmin = userRole === "admin";
+  const isTeamLead = userRole === "team_lead";
 
   // On mobile: slide in/out as overlay. On desktop: fixed, width changes.
   const sidebarVisible = isMobile ? mobileOpen : true;
