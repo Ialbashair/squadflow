@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
-import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings } from "lucide-react";
+import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 const navItems = [
   { label: "Kanban Board", icon: LayoutDashboard, page: "KanbanBoard" },
