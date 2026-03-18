@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
-import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck } from "lucide-react";
+import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck, AlertCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const navItems = [
@@ -13,14 +14,16 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onMobileClose }) {
   const location = useLocation();
+  const { roleOverride, setRoleOverride } = useAuth();
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(u => setUserRole(u?.role)).catch(() => {});
   }, []);
 
-  const isAdmin = userRole === "admin";
-  const isTeamLead = userRole === "team_lead";
+  const effectiveRole = roleOverride || userRole;
+  const isAdmin = effectiveRole === "admin";
+  const isTeamLead = effectiveRole === "team_lead";
 
   // On mobile: slide in/out as overlay. On desktop: fixed, width changes.
   const sidebarVisible = isMobile ? mobileOpen : true;
@@ -67,13 +70,20 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
               <p className="text-[10px] text-white/30 -mt-0.5">Slack → Tasks</p>
             </div>
           )}
-          {/* Close button on mobile */}
-          {isMobile && (
-            <button onClick={onMobileClose} className="ml-auto text-white/30 hover:text-white/60 transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+          {/* Role Override Indicator */}
+            {roleOverride && (
+              <div className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30">
+                <AlertCircle className="w-3 h-3 text-amber-400" />
+                <span className="text-[10px] text-amber-300 font-semibold uppercase">{roleOverride}</span>
+              </div>
+            )}
+            {/* Close button on mobile */}
+            {isMobile && (
+              <button onClick={onMobileClose} className="ml-auto text-white/30 hover:text-white/60 transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
 
         {/* Nav */}
         <nav className="flex-1 py-4 px-3 space-y-1">
