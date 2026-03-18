@@ -103,6 +103,21 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
         {/* Bottom section: settings + collapse */}
         <div className="border-t border-white/[0.04]">
           <div className="px-3 py-2 space-y-1">
+            {(isAdmin || isTeamLead) && (
+              <Link
+                to="/AuditLog"
+                onClick={isMobile ? onMobileClose : undefined}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium",
+                  location.pathname.includes("AuditLog")
+                    ? "bg-violet-500/10 text-violet-400"
+                    : "text-white/40 hover:text-white/70 hover:bg-white/[0.04]"
+                )}
+              >
+                <ShieldCheck className="w-[18px] h-[18px] flex-shrink-0" />
+                {(!collapsed || isMobile) && <span>Audit Log</span>}
+              </Link>
+            )}
             {isAdmin && (
               <Link
                 to="/AdminView"
