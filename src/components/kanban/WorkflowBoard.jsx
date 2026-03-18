@@ -155,7 +155,7 @@ export default function WorkflowBoard({ tasks, onDragEnd }) {
                     {grouped[col.id].map((task, index) => (
                       <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                         {(provided, snapshot) => (
-                          <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} />
+                          <WorkflowCard task={task} provided={provided} isDragging={snapshot.isDragging} onClick={setSelectedTask} />
                         )}
                       </Draggable>
                     ))}
