@@ -47,8 +47,14 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import KanbanBoard from './pages/KanbanBoard';
 
-export const pagesConfig = {
-	Pages: {}
+
+export const PAGES = {
+    "KanbanBoard": KanbanBoard,
 }
 
+export const pagesConfig = {
+    mainPage: "KanbanBoard",
+    Pages: PAGES,
+};
