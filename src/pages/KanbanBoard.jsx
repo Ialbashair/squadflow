@@ -8,7 +8,12 @@ import { Loader2 } from "lucide-react";
 
 export default function KanbanBoardPage() {
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(u => setIsAdmin(u?.role === "admin")).catch(() => {});
+  }, []);
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
