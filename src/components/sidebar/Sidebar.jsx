@@ -75,6 +75,13 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
               <div className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30">
                 <AlertCircle className="w-3 h-3 text-amber-400" />
                 <span className="text-[10px] text-amber-300 font-semibold uppercase">{roleOverride}</span>
+                <button
+                  onClick={() => setRoleOverride(null)}
+                  className="ml-1 text-amber-400 hover:text-amber-300 transition-colors flex-shrink-0"
+                  title="Exit role view"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </div>
             )}
             {/* Close button on mobile */}
