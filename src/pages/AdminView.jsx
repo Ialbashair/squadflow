@@ -271,9 +271,22 @@ export default function AdminView() {
       )}
 
       {showResetModal && (
-        <ResetModal
+        <ConfirmModal
+          title="Reset All Cards"
+          message="All tasks on the Kanban board will be permanently deleted. To confirm, type the code below:"
+          action="Delete All Cards"
           onClose={() => setShowResetModal(false)}
           onConfirm={handleResetAllCards}
+        />
+      )}
+
+      {showClearAuditModal && (
+        <ConfirmModal
+          title="Clear Audit Log"
+          message="All audit log entries will be permanently deleted. To confirm, type the code below:"
+          action="Clear Audit Log"
+          onClose={() => setShowClearAuditModal(false)}
+          onConfirm={handleClearAuditLog}
         />
       )}
 
