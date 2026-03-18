@@ -39,7 +39,10 @@ export default function Profile() {
     );
   }
 
-  const isAdmin = user?.role === "admin";
+  const role = user?.role ?? "user";
+  const roleDisplay = role === "admin" ? { label: "Admin", cls: "bg-violet-500/20 text-violet-300 border-violet-500/30" }
+    : role === "team_lead" ? { label: "Team Lead", cls: "bg-amber-500/20 text-amber-300 border-amber-500/30" }
+    : { label: "Team Member", cls: "bg-slate-500/20 text-slate-400 border-slate-500/30" };
 
   return (
     <div className="max-w-xl mx-auto">
@@ -54,13 +57,11 @@ export default function Profile() {
           <p className="text-lg font-semibold text-white truncate">{user?.full_name || "Unnamed"}</p>
           <p className="text-sm text-white/40 truncate">{user?.email}</p>
           <div className={cn(
-            "inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold",
-            isAdmin
-              ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
-              : "bg-slate-500/20 text-slate-400 border border-slate-500/30"
+            "inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold border",
+            roleDisplay.cls
           )}>
             <Shield className="w-3 h-3" />
-            {isAdmin ? "Admin" : "Member"}
+            {roleDisplay.label}
           </div>
         </div>
       </div>
@@ -112,14 +113,23 @@ export default function Profile() {
         <h3 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-3">Permissions</h3>
         <ul className="space-y-2 text-sm text-white/50">
           <li className="flex items-center gap-2">
-            <div className={cn("w-1.5 h-1.5 rounded-full", isAdmin ? "bg-emerald-400" : "bg-slate-600")} />
-            Move &amp; edit cards
-            {!isAdmin && <span className="ml-auto text-[10px] text-white/20">Admin only</span>}
+            <div className={cn("w-1.5 h-1.5 rounded-full", role === "admin" ? "bg-emerald-400" : "bg-slate-600")} />
+            Admin View &amp; user management
+            {role !== "admin" && <span className="ml-auto text-[10px] text-white/20">Admin only</span>}
           </li>
           <li className="flex items-center gap-2">
-            <div className={cn("w-1.5 h-1.5 rounded-full", isAdmin ? "bg-emerald-400" : "bg-slate-600")} />
+            <div className={cn("w-1.5 h-1.5 rounded-full", role === "admin" ? "bg-emerald-400" : "bg-slate-600")} />
             Sync with Slack / manage integrations
-            {!isAdmin && <span className="ml-auto text-[10px] text-white/20">Admin only</span>}
+            {role !== "admin" && <span className="ml-auto text-[10px] text-white/20">Admin only</span>}
+          </li>
+          <li className="flex items-center gap-2">
+            <div className={cn("w-1.5 h-1.5 rounded-full", (role === "admin" || role === "team_lead") ? "bg-emerald-400" : "bg-slate-600")} />
+            Move &amp; edit cards
+            {role === "user" && <span className="ml-auto text-[10px] text-white/20">Admin &amp; Team Lead</span>}
+          </li>
+          <li className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            Move cards on Kanban (assign to self)
           </li>
           <li className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
