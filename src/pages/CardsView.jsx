@@ -8,7 +8,12 @@ import { Loader2 } from "lucide-react";
 
 export default function CardsView() {
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(u => setIsAdmin(u?.role === "admin")).catch(() => {});
+  }, []);
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
@@ -52,9 +57,10 @@ export default function CardsView() {
         subtitle={`${tasks.length} items from Slack`}
         onSync={handleSync}
         isSyncing={isSyncing}
+        isAdmin={isAdmin}
       />
       <StatsBar tasks={tasks} />
-      <KanbanBoard tasks={tasks} onDragEnd={handleDragEnd} />
+      <KanbanBoard tasks={tasks} onDragEnd={isAdmin ? handleDragEnd : () => {}} isAdmin={isAdmin} />
     </div>
   );
 }
