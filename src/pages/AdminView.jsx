@@ -237,6 +237,24 @@ export default function AdminView() {
 
   return (
     <div>
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-sm bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 shadow-2xl text-center">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+              <Check className="w-6 h-6 text-emerald-400" />
+            </div>
+            <h3 className="text-base font-bold text-white mb-2">All Cards Deleted</h3>
+            <p className="text-sm text-white/40 mb-5">The Kanban board has been successfully reset.</p>
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/30 transition-all"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
       {showResetModal && (
         <ResetModal
           onClose={() => setShowResetModal(false)}
