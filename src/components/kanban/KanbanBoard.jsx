@@ -5,7 +5,7 @@ import TaskDetailModal from "./TaskDetailModal";
 
 const COLUMNS = ["task", "bug", "idea", "feature"];
 
-export default function KanbanBoard({ tasks, onDragEnd }) {
+export default function KanbanBoard({ tasks, onDragEnd, isAdmin }) {
   const [selectedTask, setSelectedTask] = useState(null);
 
   const grouped = COLUMNS.reduce((acc, col) => {
@@ -21,6 +21,7 @@ export default function KanbanBoard({ tasks, onDragEnd }) {
         <TaskDetailModal
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
+          isAdmin={isAdmin}
         />
       )}
       <DragDropContext onDragEnd={onDragEnd}>
