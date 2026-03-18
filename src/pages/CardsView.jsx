@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 export default function CardsView() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
