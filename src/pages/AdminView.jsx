@@ -8,16 +8,16 @@ function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-function ResetModal({ onClose, onConfirm }) {
+function ConfirmModal({ title, message, action, onClose, onConfirm, deleting }) {
   const [code] = useState(generateCode);
   const [input, setInput] = useState("");
-  const [deleting, setDeleting] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const handleConfirm = async () => {
     if (input !== code) return;
-    setDeleting(true);
+    setProcessing(true);
     await onConfirm();
-    setDeleting(false);
+    setProcessing(false);
   };
 
   return (
@@ -28,13 +28,13 @@ function ResetModal({ onClose, onConfirm }) {
             <Trash2 className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">Reset All Cards</h3>
+            <h3 className="text-base font-bold text-white">{title}</h3>
             <p className="text-xs text-white/40">This action cannot be undone</p>
           </div>
         </div>
 
         <p className="text-sm text-white/50 mb-5">
-          All tasks on the Kanban board will be permanently deleted. To confirm, type the code below:
+          {message}
         </p>
 
         <div className="flex items-center justify-center mb-5">
@@ -60,16 +60,16 @@ function ResetModal({ onClose, onConfirm }) {
           </button>
           <button
             onClick={handleConfirm}
-            disabled={input !== code || deleting}
+            disabled={input !== code || processing}
             className={cn(
               "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2",
-              input === code && !deleting
+              input === code && !processing
                 ? "bg-red-500/80 hover:bg-red-500 text-white"
                 : "bg-red-500/20 text-red-300/40 cursor-not-allowed"
             )}
           >
-            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-            {deleting ? "Deleting..." : "Delete All Cards"}
+            {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            {processing ? `${action}...` : action}
           </button>
         </div>
       </div>
