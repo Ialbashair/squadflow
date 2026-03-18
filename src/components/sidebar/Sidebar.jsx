@@ -91,15 +91,32 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
           })}
         </nav>
 
-        {/* Collapse toggle — desktop only */}
-        {!isMobile && (
-          <button
-            onClick={onToggle}
-            className="flex items-center justify-center h-12 border-t border-white/[0.04] text-white/20 hover:text-white/50 transition-colors"
-          >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-        )}
+        {/* Bottom section: settings + collapse */}
+        <div className="border-t border-white/[0.04]">
+          <div className="px-3 py-2">
+            <Link
+              to="/Profile"
+              onClick={isMobile ? onMobileClose : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium",
+                location.pathname.includes("Profile")
+                  ? "bg-violet-500/10 text-violet-400"
+                  : "text-white/40 hover:text-white/70 hover:bg-white/[0.04]"
+              )}
+            >
+              <Settings className="w-[18px] h-[18px] flex-shrink-0" />
+              {(!collapsed || isMobile) && <span>Settings</span>}
+            </Link>
+          </div>
+          {!isMobile && (
+            <button
+              onClick={onToggle}
+              className="flex items-center justify-center w-full h-10 border-t border-white/[0.04] text-white/20 hover:text-white/50 transition-colors"
+            >
+              {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
       </aside>
     </>
   );
