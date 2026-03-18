@@ -214,20 +214,22 @@ export default function TaskDetailModal({ task, onClose, onSaved, isAdmin = true
           </div>
           <div className="flex items-center gap-2">
             <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm text-white/30 hover:text-white/60 hover:bg-white/[0.04] transition-all">
-              Cancel
+              {isAdmin ? "Cancel" : "Close"}
             </button>
-            <Button
-              onClick={handleSave}
-              disabled={!dirty || saveMutation.isPending}
-              className={cn(
-                "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
-                "text-white text-sm font-medium rounded-xl px-5 h-9 border-0",
-                "shadow-lg shadow-violet-500/20 disabled:opacity-40 transition-all"
-              )}
-            >
-              <Save className="w-3.5 h-3.5 mr-1.5" />
-              {saveMutation.isPending ? "Saving…" : "Save changes"}
-            </Button>
+            {isAdmin && (
+              <Button
+                onClick={handleSave}
+                disabled={!dirty || saveMutation.isPending}
+                className={cn(
+                  "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
+                  "text-white text-sm font-medium rounded-xl px-5 h-9 border-0",
+                  "shadow-lg shadow-violet-500/20 disabled:opacity-40 transition-all"
+                )}
+              >
+                <Save className="w-3.5 h-3.5 mr-1.5" />
+                {saveMutation.isPending ? "Saving…" : "Save changes"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { RefreshCw, Bell, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SearchModal from "@/components/search/SearchModal";
 
-export default function Header({ title, subtitle, onSync, isSyncing }) {
+export default function Header({ title, subtitle, onSync, isSyncing, isAdmin }) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
@@ -25,19 +25,21 @@ export default function Header({ title, subtitle, onSync, isSyncing }) {
             <Bell className="w-4 h-4" />
             <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-violet-400 rounded-full" />
           </button>
-          <Button
-            onClick={onSync}
-            disabled={isSyncing}
-            className={cn(
-              "ml-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
-              "text-white text-sm font-medium rounded-xl px-5 h-10",
-              "shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30",
-              "transition-all duration-200 border-0"
-            )}
-          >
-            <RefreshCw className={cn("w-4 h-4 mr-2", isSyncing && "animate-spin")} />
-            {isSyncing ? "Syncing..." : "Sync with Slack"}
-          </Button>
+          {isAdmin && (
+            <Button
+              onClick={onSync}
+              disabled={isSyncing}
+              className={cn(
+                "ml-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
+                "text-white text-sm font-medium rounded-xl px-5 h-10",
+                "shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30",
+                "transition-all duration-200 border-0"
+              )}
+            >
+              <RefreshCw className={cn("w-4 h-4 mr-2", isSyncing && "animate-spin")} />
+              {isSyncing ? "Syncing..." : "Sync with Slack"}
+            </Button>
+          )}
         </div>
       </header>
 
