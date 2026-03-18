@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
-import { Shield, User, Mail, ChevronDown, Loader2, Search, Save, AlertTriangle } from "lucide-react";
+import { Shield, User, Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ROLES = [
