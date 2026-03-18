@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/header/Header";
 import WorkflowStatsBar from "@/components/stats/WorkflowStatsBar";
 import WorkflowBoard from "@/components/kanban/WorkflowBoard";
+import SlackSyncModal from "@/components/slack/SlackSyncModal";
 import { Loader2 } from "lucide-react";
 
 export default function KanbanBoardPage() {
