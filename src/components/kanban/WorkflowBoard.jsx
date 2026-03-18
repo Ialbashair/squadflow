@@ -118,6 +118,13 @@ export default function WorkflowBoard({ tasks, onDragEnd }) {
   }, {});
 
   return (
+    <>
+    {selectedTask && (
+      <TaskDetailModal
+        task={selectedTask}
+        onClose={() => setSelectedTask(null)}
+      />
+    )}
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
         {COLUMNS.map(col => {
