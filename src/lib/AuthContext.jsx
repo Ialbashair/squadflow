@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
+  const [roleOverride, setRoleOverride] = useState(null); // For viewing app as different role
 
   useEffect(() => {
     checkAppState();
@@ -128,6 +129,11 @@ export const AuthProvider = ({ children }) => {
     base44.auth.redirectToLogin(window.location.href);
   };
 
+  const getEffectiveUser = () => {
+    if (!user || !roleOverride) return user;
+    return { ...user, role: roleOverride };
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -138,7 +144,10 @@ export const AuthProvider = ({ children }) => {
       appPublicSettings,
       logout,
       navigateToLogin,
-      checkAppState
+      checkAppState,
+      roleOverride,
+      setRoleOverride,
+      getEffectiveUser
     }}>
       {children}
     </AuthContext.Provider>
