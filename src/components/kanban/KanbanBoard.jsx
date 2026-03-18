@@ -14,7 +14,7 @@ export default function KanbanBoard({ tasks, onDragEnd }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-5 overflow-x-auto pb-4 px-1">
+      <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
         {COLUMNS.map(col => (
           <KanbanColumn key={col} columnId={col} tasks={grouped[col]} />
         ))}
