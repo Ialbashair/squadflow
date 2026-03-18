@@ -158,6 +158,32 @@ export default function AdminView() {
         </div>
       </div>
 
+      {/* Invite link */}
+      <div className="mb-6 p-4 rounded-2xl bg-violet-500/[0.06] border border-violet-500/20">
+        <div className="flex items-center gap-2 mb-2">
+          <Link className="w-4 h-4 text-violet-400" />
+          <span className="text-sm font-semibold text-violet-300">Invite Link</span>
+        </div>
+        <p className="text-xs text-white/40 mb-3">Share this link with anyone to invite them to the app. New users join as Team Members by default.</p>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white/50 font-mono truncate">
+            {inviteLink}
+          </div>
+          <button
+            onClick={copyInviteLink}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all flex-shrink-0",
+              copied
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                : "bg-violet-500/20 text-violet-300 border border-violet-500/30 hover:bg-violet-500/30"
+            )}
+          >
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+      </div>
+
       {/* Role legend */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         {ROLES.map(r => (
