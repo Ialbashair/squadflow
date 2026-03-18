@@ -108,6 +108,8 @@ function WorkflowCard({ task, provided, isDragging, onClick }) {
 }
 
 export default function WorkflowBoard({ tasks, onDragEnd }) {
+  const [selectedTask, setSelectedTask] = useState(null);
+
   const grouped = COLUMNS.reduce((acc, col) => {
     acc[col.id] = tasks
       .filter(t => (t.status || "backlog") === col.id)
