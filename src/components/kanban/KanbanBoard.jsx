@@ -2,12 +2,12 @@ import React from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
 import KanbanColumn from "./KanbanColumn";
 
-const COLUMNS = ["todo", "in_progress", "done"];
+const COLUMNS = ["task", "bug", "idea", "feature"];
 
 export default function KanbanBoard({ tasks, onDragEnd }) {
   const grouped = COLUMNS.reduce((acc, col) => {
     acc[col] = tasks
-      .filter(t => t.status === col)
+      .filter(t => t.type === col)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
     return acc;
   }, {});

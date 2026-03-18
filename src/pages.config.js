@@ -56,7 +56,10 @@ export const PAGES = {
     "SlackInbox": SlackInbox,
 }
 
+import __Layout from './Layout.jsx';
+
 export const pagesConfig = {
     mainPage: "KanbanBoard",
     Pages: PAGES,
+    Layout: __Layout,
 };
