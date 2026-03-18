@@ -39,10 +39,14 @@ export default function KanbanBoardPage() {
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    const task = tasks.find(t => String(t.id) === draggableId);
     updateMutation.mutate({
       id: draggableId,
       data: { status: destination.droppableId, order: destination.index },
     });
+    if (task && destination.droppableId !== source.droppableId) {
+      logTaskMoved({ task, fromStatus: source.droppableId, toStatus: destination.droppableId, user: currentUser });
+    }
   };
 
   const handleSync = () => {
