@@ -123,9 +123,10 @@ export default function WorkflowBoard({ tasks, onDragEnd, isAdmin }) {
         <TaskDetailModal
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
+          isAdmin={isAdmin}
         />
       )}
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={isAdmin ? onDragEnd : () => {}}
         <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
           {COLUMNS.map(col => {
             const ColIcon = col.icon;
