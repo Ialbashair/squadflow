@@ -1,8 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
-import { Shield, User, Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check } from "lucide-react";
+import { Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+function generateCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+function ResetModal({ onClose, onConfirm }) {
+  const [code] = useState(generateCode);
+  const [input, setInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const handleConfirm = async () => {
+    if (input !== code) return;
+    setDeleting(true);
+    await onConfirm();
+    setDeleting(false);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div className="w-full max-w-md bg-slate-900 border border-red-500/30 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
+            <Trash2 className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Reset All Cards</h3>
+            <p className="text-xs text-white/40">This action cannot be undone</p>
+          </div>
+        </div>
+
+        <p className="text-sm text-white/50 mb-5">
+          All tasks on the Kanban board will be permanently deleted. To confirm, type the code below:
+        </p>
+
+        <div className="flex items-center justify-center mb-5">
+          <div className="px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/30 font-mono text-2xl font-bold text-red-300 tracking-[0.3em]">
+            {code}
+          </div>
+        </div>
+
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value.toUpperCase())}
+          placeholder="Type the code above..."
+          className="w-full bg-white/[0.04] border border-white/[0.1] rounded-xl px-4 py-2.5 text-sm text-white font-mono tracking-widest outline-none focus:border-red-500/50 transition-colors placeholder:text-white/20 mb-4 text-center"
+          maxLength={6}
+        />
+
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-2.5 rounded-xl border border-white/[0.1] text-sm text-white/50 hover:text-white/80 hover:border-white/20 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={input !== code || deleting}
+            className={cn(
+              "flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2",
+              input === code && !deleting
+                ? "bg-red-500/80 hover:bg-red-500 text-white"
+                : "bg-red-500/20 text-red-300/40 cursor-not-allowed"
+            )}
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            {deleting ? "Deleting..." : "Delete All Cards"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const ROLES = [
   {
