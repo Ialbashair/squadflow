@@ -54,6 +54,14 @@ export default function CardsView() {
 
   return (
     <div>
+      <SlackSyncModal
+        open={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        onSynced={() => {
+          queryClient.invalidateQueries({ queryKey: ["tasks"] });
+          setShowSyncModal(false);
+        }}
+      />
       <Header
         title="Cards View"
         subtitle={`${tasks.length} items from Slack`}
