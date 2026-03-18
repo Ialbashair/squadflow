@@ -17,7 +17,7 @@ const priorityConfig = {
   low:    { icon: ArrowDown,     label: "Low",    color: "text-slate-400",  dot: "bg-slate-400" },
 };
 
-export default function KanbanCard({ task, provided, isDragging }) {
+export default function KanbanCard({ task, provided, isDragging, onClick }) {
   const type = typeConfig[task.type] || typeConfig.task;
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const TypeIcon = type.icon;
