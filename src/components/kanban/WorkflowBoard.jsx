@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import {
   AlertTriangle, Clock, ArrowUp, ArrowDown,
   Hash, Inbox, PlayCircle, Eye, CheckCircle2
 } from "lucide-react";
+import TaskDetailModal from "./TaskDetailModal";
 
 const COLUMNS = [
   { id: "backlog",     label: "Backlog",     icon: Inbox,        accent: "bg-slate-500",   glow: "shadow-slate-500/20",   color: "text-slate-400" },
