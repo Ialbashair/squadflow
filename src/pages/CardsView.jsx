@@ -40,11 +40,8 @@ export default function CardsView() {
     });
   };
 
-  const handleSync = async () => {
-    setIsSyncing(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsSyncing(false);
-    queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  const handleSync = () => {
+    setShowSyncModal(true);
   };
 
   if (isLoading) {
