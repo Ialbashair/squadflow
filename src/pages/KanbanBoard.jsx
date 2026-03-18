@@ -13,10 +13,12 @@ export default function KanbanBoardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminOnly, setIsAdminOnly] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(u => {
+      setCurrentUser(u);
       const role = u?.role;
       setIsAdmin(role === "admin" || role === "team_lead");
       setIsAdminOnly(role === "admin");
