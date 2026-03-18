@@ -160,6 +160,8 @@ export default function AuditLogPage() {
     );
   }
 
+  const hasActiveFilters = searchQuery || userFilter || dateFrom || dateTo;
+
   return (
     <div>
       <div className="flex items-center gap-3 mb-8">
@@ -168,17 +170,79 @@ export default function AuditLogPage() {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Audit Log</h2>
-          <p className="text-sm text-white/30 mt-0.5">{logs.length} recorded actions</p>
+          <p className="text-sm text-white/30 mt-0.5">{filteredLogs.length} of {logs.length} actions</p>
         </div>
+      </div>
+
+      {/* Search & Filter Section */}
+      <div className="mb-6 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">Card Name</label>
+            <Input
+              type="text"
+              placeholder="Search by card name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 h-9"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">User</label>
+            <Input
+              type="text"
+              placeholder="Search by user..."
+              value={userFilter}
+              onChange={(e) => setUserFilter(e.target.value)}
+              className="bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 h-9"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">From Date</label>
+            <Input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="bg-white/[0.04] border-white/[0.08] text-white h-9"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">To Date</label>
+            <Input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="bg-white/[0.04] border-white/[0.08] text-white h-9"
+            />
+          </div>
+        </div>
+        {hasActiveFilters && (
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setUserFilter("");
+              setDateFrom("");
+              setDateTo("");
+            }}
+            className="mt-3 flex items-center gap-2 text-xs text-white/40 hover:text-white/60 transition-colors"
+          >
+            <X className="w-3 h-3" />
+            Clear filters
+          </button>
+        )}
       </div>
 
       {logs.length === 0 ? (
         <div className="text-center py-16 text-white/20 text-sm">
           No actions recorded yet. Actions will appear here as team members interact with the board.
         </div>
+      ) : filteredLogs.length === 0 ? (
+        <div className="text-center py-16 text-white/20 text-sm">
+          No actions match your filters.
+        </div>
       ) : (
         <div className="space-y-2">
-          {logs.map(log => <LogEntry key={log.id} log={log} />)}
+          {filteredLogs.map(log => <LogEntry key={log.id} log={log} />)}
         </div>
       )}
     </div>
