@@ -56,6 +56,14 @@ export default function KanbanBoardPage() {
 
   return (
     <div>
+      <SlackSyncModal
+        open={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        onSynced={() => {
+          queryClient.invalidateQueries({ queryKey: ["tasks"] });
+          setShowSyncModal(false);
+        }}
+      />
       <Header
         title="Kanban Board"
         subtitle={`${tasks.length} items from Slack`}
