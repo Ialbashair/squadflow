@@ -415,21 +415,31 @@ export default function AdminView() {
 
       {/* Danger Zone */}
       <div className="mt-10 p-4 rounded-2xl bg-red-500/[0.04] border border-red-500/20">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Trash2 className="w-4 h-4 text-red-400" />
-              <span className="text-sm font-semibold text-red-300">Danger Zone</span>
-            </div>
+        <div className="flex items-center gap-2 mb-4">
+          <Trash2 className="w-4 h-4 text-red-400" />
+          <span className="text-sm font-semibold text-red-300">Danger Zone</span>
+        </div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
             <p className="text-xs text-white/30">Permanently delete all cards from the Kanban board.</p>
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-semibold hover:bg-red-500/30 transition-all flex-shrink-0"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Reset All Cards
+            </button>
           </div>
-          <button
-            onClick={() => setShowResetModal(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-semibold hover:bg-red-500/30 transition-all flex-shrink-0"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            Reset All Cards
-          </button>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-white/30">Permanently delete all audit log entries.</p>
+            <button
+              onClick={() => setShowClearAuditModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-semibold hover:bg-red-500/30 transition-all flex-shrink-0"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Clear Audit Log
+            </button>
+          </div>
         </div>
       </div>
     </div>
