@@ -176,5 +176,6 @@ export default function WorkflowBoard({ tasks, onDragEnd }) {
         })}
       </div>
     </DragDropContext>
+    </>
   );
 }
