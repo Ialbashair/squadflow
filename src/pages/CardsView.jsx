@@ -17,6 +17,7 @@ export default function CardsView() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
+      setCurrentUser(u);
       const role = u?.role;
       setIsAdmin(role === "admin" || role === "team_lead");
     }).catch(() => {});
