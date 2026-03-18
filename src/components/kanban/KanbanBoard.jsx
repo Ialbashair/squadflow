@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
 import KanbanColumn from "./KanbanColumn";
+import TaskDetailModal from "./TaskDetailModal";
 
 const COLUMNS = ["task", "bug", "idea", "feature"];
 
 export default function KanbanBoard({ tasks, onDragEnd }) {
+  const [selectedTask, setSelectedTask] = useState(null);
+
   const grouped = COLUMNS.reduce((acc, col) => {
     acc[col] = tasks
       .filter(t => t.type === col)
@@ -13,12 +16,20 @@ export default function KanbanBoard({ tasks, onDragEnd }) {
   }, {});
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
-        {COLUMNS.map(col => (
-          <KanbanColumn key={col} columnId={col} tasks={grouped[col]} />
-        ))}
-      </div>
-    </DragDropContext>
+    <>
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex flex-col md:flex-row gap-4 md:overflow-x-auto pb-4 px-1">
+          {COLUMNS.map(col => (
+            <KanbanColumn key={col} columnId={col} tasks={grouped[col]} onCardClick={setSelectedTask} />
+          ))}
+        </div>
+      </DragDropContext>
+    </>
   );
 }
