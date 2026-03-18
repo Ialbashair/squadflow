@@ -87,6 +87,15 @@ export default function AdminView() {
   const [search, setSearch] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [notAdmin, setNotAdmin] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const inviteLink = `${window.location.origin}`;
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     base44.auth.me().then(me => {
