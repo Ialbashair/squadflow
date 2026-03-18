@@ -13,6 +13,13 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onMobileClose }) {
   const location = useLocation();
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(u => setUserRole(u?.role)).catch(() => {});
+  }, []);
+
+  const isAdmin = userRole === "admin";
 
   // On mobile: slide in/out as overlay. On desktop: fixed, width changes.
   const sidebarVisible = isMobile ? mobileOpen : true;
