@@ -14,7 +14,7 @@ export default function KanbanColumn({ columnId, tasks }) {
   const config = columnConfig[columnId] || columnConfig.todo;
 
   return (
-    <div className="flex flex-col min-w-[320px] max-w-[360px] flex-1">
+    <div className="flex flex-col w-full md:min-w-[280px] md:max-w-[340px] md:flex-1">
       {/* Column header */}
       <div className="flex items-center gap-3 mb-4 px-1">
         <div className={cn("w-2.5 h-2.5 rounded-full shadow-lg", config.accent, config.glow)} />
