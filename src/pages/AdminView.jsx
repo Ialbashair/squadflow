@@ -235,6 +235,13 @@ export default function AdminView() {
 
   return (
     <div>
+      {showResetModal && (
+        <ResetModal
+          onClose={() => setShowResetModal(false)}
+          onConfirm={handleResetAllCards}
+        />
+      )}
+
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Admin View</h2>
