@@ -25,7 +25,7 @@ export default function Header({ title, subtitle, onSync, isSyncing, isAdmin }) 
             <Bell className="w-4 h-4" />
             <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-violet-400 rounded-full" />
           </button>
-          {isAdmin && (
+          {isAdmin === true && (
             <Button
               onClick={onSync}
               disabled={isSyncing}

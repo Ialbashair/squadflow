@@ -12,7 +12,10 @@ export default function CardsView() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me().then(u => setIsAdmin(u?.role === "admin")).catch(() => {});
+    base44.auth.me().then(u => {
+      const role = u?.role;
+      setIsAdmin(role === "admin" || role === "team_lead");
+    }).catch(() => {});
   }, []);
 
   const { data: tasks = [], isLoading } = useQuery({
