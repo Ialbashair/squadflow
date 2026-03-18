@@ -89,7 +89,7 @@ export default function AdminView() {
   const [notAdmin, setNotAdmin] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const isPreview = window.location.hostname.includes("base44.com") || window.location.hostname.includes("localhost");
+  const isPreview = window.location.hostname.includes("base44.com") && window.location.hostname.includes("preview");
   const publishedOrigin = isPreview ? "" : window.location.origin;
   const [inviteBase, setInviteBase] = useState(publishedOrigin);
   const inviteLink = inviteBase ? inviteBase.replace(/\/$/, "") : "";
