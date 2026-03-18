@@ -16,6 +16,7 @@ export default function KanbanBoardPage() {
     base44.auth.me().then(u => {
       const role = u?.role;
       setIsAdmin(role === "admin" || role === "team_lead");
+      setIsAdminOnly(role === "admin");
     }).catch(() => {});
   }, []);
 
