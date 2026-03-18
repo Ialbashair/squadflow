@@ -57,9 +57,10 @@ export default function KanbanBoardPage() {
         subtitle={`${tasks.length} items from Slack`}
         onSync={handleSync}
         isSyncing={isSyncing}
+        isAdmin={isAdmin}
       />
       <WorkflowStatsBar tasks={tasks} />
-      <WorkflowBoard tasks={tasks} onDragEnd={handleDragEnd} />
+      <WorkflowBoard tasks={tasks} onDragEnd={handleDragEnd} isAdmin={isAdmin} />
     </div>
   );
 }
