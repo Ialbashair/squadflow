@@ -156,7 +156,10 @@ export const AuthProvider = ({ children }) => {
       checkAppState,
       roleOverride,
       setRoleOverride,
-      getEffectiveUser
+      getEffectiveUser,
+      activeBoardId,
+      activeBoard,
+      setActiveBoardId
     }}>
       {children}
     </AuthContext.Provider>
