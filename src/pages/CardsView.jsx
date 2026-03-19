@@ -17,6 +17,7 @@ export default function CardsView() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
+  const [showSlackSettings, setShowSlackSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
