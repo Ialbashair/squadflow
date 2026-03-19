@@ -17,11 +17,18 @@ const typeConfig = {
 };
 
 export default function SlackInbox() {
+  const { activeBoardId } = useAuth();
+  const navigate = useNavigate();
   const [selectedTask, setSelectedTask] = useState(null);
 
+  useEffect(() => {
+    if (!activeBoardId) navigate("/");
+  }, [activeBoardId]);
+
   const { data: tasks = [], isLoading } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: () => base44.entities.Task.list("-created_date", 50),
+    queryKey: ["tasks", activeBoardId],
+    queryFn: () => base44.entities.Task.filter({ board_id: activeBoardId }, "-created_date", 50),
+    enabled: !!activeBoardId,
   });
 
   return (
