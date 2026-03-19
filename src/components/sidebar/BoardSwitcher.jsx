@@ -69,6 +69,18 @@ export default function BoardSwitcher({ collapsed }) {
               <p className="text-[10px] text-white/30 font-semibold uppercase tracking-wider">Switch Board</p>
             </div>
             <div className="max-h-52 overflow-y-auto py-1">
+              {/* Deselect option */}
+              {activeBoardId && (
+                <button
+                  onClick={() => { setActiveBoardId(null, null); setOpen(false); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left hover:bg-white/[0.05] transition-colors border-b border-white/[0.05]"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
+                    <X className="w-3 h-3 text-white/30" />
+                  </div>
+                  <span className="text-xs text-white/40 flex-1">No board selected</span>
+                </button>
+              )}
               {boards.length === 0 && (
                 <p className="text-xs text-white/20 text-center py-4">No boards yet</p>
               )}
