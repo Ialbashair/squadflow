@@ -100,9 +100,11 @@ Each task object:
         type: task.type || 'task',
         priority: task.priority || 'medium',
         status: 'backlog',
-        slack_channel: channel_id,
+        slack_channel: channel_name || channel_id,
+        slack_channel_id: channel_id,
         slack_author: authorInfo?.name || msg.username || 'Unknown',
         slack_avatar: authorInfo?.avatar || '',
+        slack_message_ts: msg.ts || '',
         order: 0
       });
       createdCount++;
