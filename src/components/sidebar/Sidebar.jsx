@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
 import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck, AlertCircle, Home } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import BoardSwitcher from "./BoardSwitcher";
 
 const navItems = [
   { label: "My Boards",    icon: Home,            page: "Dashboard",    path: "/Dashboard" },
