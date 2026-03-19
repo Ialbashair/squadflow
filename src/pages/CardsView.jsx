@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import StatsBar from "@/components/stats/StatsBar";
 import KanbanBoard from "@/components/kanban/KanbanBoard";
