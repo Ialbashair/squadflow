@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
       user_email: user.email,
       user_name: user.full_name || user.email,
       role: 'admin',
-      status: 'accepted',
+      status: 'active',
       joined_at: new Date().toISOString(),
     });
 
