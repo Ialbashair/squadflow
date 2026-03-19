@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Loader2, Plus, ArrowLeft, RefreshCw, AlertTriangle, Users } from "lucide-react";
+import { Loader2, Plus, ArrowLeft, RefreshCw, AlertTriangle, Users, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BoardTaskCard from "@/components/boards/BoardTaskCard";
 import BoardTaskModal from "@/components/boards/BoardTaskModal";
