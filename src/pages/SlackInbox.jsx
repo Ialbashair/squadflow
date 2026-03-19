@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import SlackMessageModal from "@/components/slack/SlackMessageModal";
+import SlackSyncModal from "@/components/slack/SlackSyncModal";
+import SlackSettingsModal from "@/components/slack/SlackSettingsModal";
 import { Badge } from "@/components/ui/badge";
 import { Hash, Clock, ArrowRight, Bug, Lightbulb, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,9 +19,19 @@ const typeConfig = {
 };
 
 export default function SlackInbox() {
-  const { activeBoardId } = useAuth();
+  const { activeBoardId, activeBoard } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [selectedTask, setSelectedTask] = useState(null);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [showSlackSettings, setShowSlackSettings] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => {
+      setIsAdmin(u?.role === "admin");
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!activeBoardId) navigate("/");
