@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const CONNECTOR_ID = "69bc1bbdaebca403c4460985";
 
-export default function SlackSyncModal({ open, onClose, onSynced }) {
+export default function SlackSyncModal({ open, onClose, onSynced, boardId }) {
   const [channels, setChannels] = useState([]);
   const [loadingChannels, setLoadingChannels] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState(null);
@@ -73,7 +73,7 @@ export default function SlackSyncModal({ open, onClose, onSynced }) {
     setSyncing(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke("syncSlack", { channel_id: selectedChannel.id, channel_name: selectedChannel.name });
+      const res = await base44.functions.invoke("syncSlack", { channel_id: selectedChannel.id, channel_name: selectedChannel.name, board_id: boardId });
       setResult(res.data);
       onSynced?.();
     } catch (e) {
