@@ -16,7 +16,7 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onMobileClose }) {
   const location = useLocation();
-  const { roleOverride, setRoleOverride } = useAuth();
+  const { roleOverride, setRoleOverride, activeBoardId } = useAuth();
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
