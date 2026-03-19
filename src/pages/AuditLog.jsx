@@ -113,8 +113,10 @@ export default function AuditLogPage() {
   }, []);
 
   const { data: logs = [], isLoading } = useQuery({
-    queryKey: ["audit-logs"],
-    queryFn: () => base44.entities.AuditLog.list("-created_date", 500),
+    queryKey: ["audit-logs", activeBoardId],
+    queryFn: () => activeBoardId
+      ? base44.entities.AuditLog.filter({ board_id: activeBoardId }, "-created_date", 500)
+      : base44.entities.AuditLog.list("-created_date", 500),
     enabled: !notAuthorized && !loadingUser,
   });
 
