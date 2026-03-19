@@ -217,6 +217,13 @@ export default function AdminView() {
     setShowSuccessModal(true);
   };
 
+  const handleDisconnectSlack = async () => {
+    await base44.functions.invoke("disconnectSlack", {});
+    setShowDisconnectSlackModal(false);
+    setSuccessMessage("Slack Disconnected");
+    setShowSuccessModal(true);
+  };
+
   const handleSave = async (user) => {
     const newRole = pendingRoles[user.id];
     if (!newRole) return;
