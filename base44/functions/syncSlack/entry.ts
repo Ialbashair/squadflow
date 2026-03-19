@@ -19,14 +19,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Only board admins can sync Slack' }, { status: 403 });
     }
 
-    // Get the board's connected admin token
+    // Verify this admin is the one connected to this board
     const boards = await base44.asServiceRole.entities.Board.filter({ id: board_id });
     const board = boards[0];
     if (!board?.slack_admin_user_id) {
-      return Response.json({ error: 'Slack is not connected to this board. An admin must connect Slack first.' }, { status: 400 });
+      return Response.json({ error: 'Slack is not connected to this board. Connect Slack first.' }, { status: 400 });
+    }
+    if (board.slack_admin_user_id !== user.id) {
+      return Response.json({ error: `Only the admin who connected Slack (${board.slack_admin_user_name}) can sync this board.` }, { status: 403 });
     }
 
-    const accessToken = await base44.asServiceRole.connectors.getAppUserAccessToken(CONNECTOR_ID, board.slack_admin_user_id);
+    // Use the current admin's Slack token
+    const accessToken = await base44.connectors.getCurrentAppUserAccessToken(CONNECTOR_ID);
 
     // Fetch channel history
     const historyRes = await fetch(
@@ -65,7 +69,6 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, processed: 0, created: 0 });
     }
 
-    // Batch all messages into a single LLM call
     const messagesJson = meaningfulMessages.map((m, i) => `[${i}] ${m.text}`).join('\n\n');
 
     const aiResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
@@ -108,7 +111,6 @@ Each task object:
     const sorted = columns.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
     const firstColumnId = sorted[0]?.id || null;
 
-    // Fetch author info and create tasks
     let createdCount = 0;
     for (const task of extractedTasks) {
       const msg = meaningfulMessages[task.index];
