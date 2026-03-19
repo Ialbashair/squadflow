@@ -9,6 +9,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Profile from './pages/Profile';
 import AdminView from './pages/AdminView';
 import AuditLog from './pages/AuditLog';
+import BoardView from './pages/BoardView';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -63,6 +64,7 @@ const AuthenticatedApp = () => {
       <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />
       <Route path="/AdminView" element={<LayoutWrapper currentPageName="AdminView"><AdminView /></LayoutWrapper>} />
       <Route path="/AuditLog" element={<LayoutWrapper currentPageName="AuditLog"><AuditLog /></LayoutWrapper>} />
+      <Route path="/board/:id" element={<LayoutWrapper currentPageName="BoardView"><BoardView /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -50,17 +50,19 @@
 import KanbanBoard from './pages/KanbanBoard';
 import SlackInbox from './pages/SlackInbox';
 import CardsView from './pages/CardsView';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Dashboard": Dashboard,
     "KanbanBoard": KanbanBoard,
     "SlackInbox": SlackInbox,
     "CardsView": CardsView,
 }
 
 export const pagesConfig = {
-    mainPage: "KanbanBoard",
+    mainPage: "Dashboard",
     Pages: PAGES,
     Layout: __Layout,
 };
