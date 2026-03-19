@@ -3,11 +3,12 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Loader2, Plus, ArrowLeft, RefreshCw, AlertTriangle } from "lucide-react";
+import { Loader2, Plus, ArrowLeft, RefreshCw, AlertTriangle, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BoardTaskCard from "@/components/boards/BoardTaskCard";
 import BoardTaskModal from "@/components/boards/BoardTaskModal";
 import SlackSyncModal from "@/components/slack/SlackSyncModal";
+import MembersModal from "@/components/boards/MembersModal";
 
 export default function BoardView() {
   const { id: boardId } = useParams();
@@ -16,6 +17,7 @@ export default function BoardView() {
   const [accessChecked, setAccessChecked] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showSync, setShowSync] = useState(false);
+  const [showMembers, setShowMembers] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function BoardView() {
       setCurrentUser(u);
       // Check board membership
       const members = await base44.entities.BoardMember.filter({ board_id: boardId, user_id: u.id });
-      const m = members.find(m => m.status === "accepted");
+      const m = members.find(m => m.status === "active");
       setMembership(m || null);
       setAccessChecked(true);
     }).catch(() => setAccessChecked(true));
@@ -117,6 +119,14 @@ export default function BoardView() {
 
   return (
     <div>
+      {showMembers && (
+        <MembersModal
+          boardId={boardId}
+          currentUserId={currentUser?.id}
+          onClose={() => setShowMembers(false)}
+        />
+      )}
+
       <SlackSyncModal
         open={showSync}
         onClose={() => setShowSync(false)}
@@ -151,15 +161,24 @@ export default function BoardView() {
             {board?.description && <p className="text-sm text-white/30 mt-0.5">{board.description}</p>}
           </div>
         </div>
-        {isAdmin && (
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowSync(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold transition-all shadow-lg shadow-violet-500/20"
+            onClick={() => setShowMembers(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.14] text-white/60 hover:text-white text-sm transition-all"
           >
-            <RefreshCw className="w-4 h-4" />
-            Sync from Slack
+            <Users className="w-4 h-4" />
+            Members
           </button>
-        )}
+          {isAdmin && (
+            <button
+              onClick={() => setShowSync(true)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold transition-all shadow-lg shadow-violet-500/20"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Sync from Slack
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Kanban columns */}
