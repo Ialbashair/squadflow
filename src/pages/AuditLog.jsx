@@ -93,6 +93,7 @@ function LogEntry({ log }) {
 }
 
 export default function AuditLogPage() {
+  const { activeBoardId, activeBoard } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
   const [notAuthorized, setNotAuthorized] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
