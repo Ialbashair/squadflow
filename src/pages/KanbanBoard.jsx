@@ -101,6 +101,7 @@ export default function KanbanBoardPage() {
         onSync={handleSync}
         isSyncing={isSyncing}
         isAdmin={isAdminOnly}
+        onSlackSettings={isAdminOnly ? () => setShowSlackSettings(true) : undefined}
       />
       <WorkflowStatsBar tasks={tasks} />
       <WorkflowBoard tasks={tasks} onDragEnd={handleDragEnd} isAdmin={isAdmin} canDrag={true} />
