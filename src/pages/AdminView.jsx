@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
-import { Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check, Trash2, X } from "lucide-react";
+import { Mail, ChevronDown, Loader2, Search, Save, AlertTriangle, Link, Copy, Check, Trash2, X, Unplug } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function generateCode() {
