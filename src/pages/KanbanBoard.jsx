@@ -30,9 +30,14 @@ export default function KanbanBoardPage() {
     }).catch(() => {});
   }, [getEffectiveUser]);
 
+  useEffect(() => {
+    if (!activeBoardId) navigate("/");
+  }, [activeBoardId]);
+
   const { data: tasks = [], isLoading } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: () => base44.entities.Task.list("-created_date", 100),
+    queryKey: ["tasks", activeBoardId],
+    queryFn: () => base44.entities.Task.filter({ board_id: activeBoardId }, "-created_date", 100),
+    enabled: !!activeBoardId,
   });
 
   const updateMutation = useMutation({
