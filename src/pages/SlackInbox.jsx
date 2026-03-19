@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/header/Header";
+import SlackMessageModal from "@/components/slack/SlackMessageModal";
 import { Badge } from "@/components/ui/badge";
 import { Hash, Clock, ArrowRight, Bug, Lightbulb, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,8 @@ const typeConfig = {
 };
 
 export default function SlackInbox() {
+  const [selectedTask, setSelectedTask] = useState(null);
+
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => base44.entities.Task.list("-created_date", 50),
@@ -22,6 +25,10 @@ export default function SlackInbox() {
   return (
     <div>
       <Header title="Slack Inbox" subtitle="Recent messages tagged for action" />
+
+      {selectedTask && (
+        <SlackMessageModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+      )}
 
       <div className="space-y-2">
         {isLoading ? (
@@ -41,7 +48,8 @@ export default function SlackInbox() {
             return (
               <div
                 key={task.id}
-                className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors group"
+                onClick={() => setSelectedTask(task)}
+                className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.04] transition-colors group cursor-pointer"
               >
                 <div className={cn("p-2 rounded-lg", type.className.split(" ")[0])}>
                   <TypeIcon className={cn("w-4 h-4", type.className.split(" ")[1])} />
