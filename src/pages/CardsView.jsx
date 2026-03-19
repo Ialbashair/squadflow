@@ -11,6 +11,8 @@ import { logTaskTypeChanged } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
 export default function CardsView() {
+  const { activeBoardId, activeBoard } = useAuth();
+  const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
