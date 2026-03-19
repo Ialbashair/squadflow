@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Bell, Search } from "lucide-react";
+import { RefreshCw, Bell, Search, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SearchModal from "@/components/search/SearchModal";
 
-export default function Header({ title, subtitle, onSync, isSyncing, isAdmin }) {
+export default function Header({ title, subtitle, onSync, isSyncing, isAdmin, onSlackSettings }) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
