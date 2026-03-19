@@ -303,6 +303,16 @@ export default function AdminView() {
         />
       )}
 
+      {showDisconnectSlackModal && (
+        <ConfirmModal
+          title="Disconnect Slack"
+          message="This will permanently delete ALL cards and audit logs from the app. After confirming, go to Dashboard → Integrations to revoke the Slack token. To confirm, type the code below:"
+          action="Disconnect Slack"
+          onClose={() => setShowDisconnectSlackModal(false)}
+          onConfirm={handleDisconnectSlack}
+        />
+      )}
+
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Admin View</h2>
