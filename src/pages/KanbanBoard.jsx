@@ -77,7 +77,7 @@ export default function KanbanBoardPage() {
         open={showSyncModal}
         onClose={() => setShowSyncModal(false)}
         onSynced={() => {
-          queryClient.invalidateQueries({ queryKey: ["tasks"] });
+          queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] });
           setShowSyncModal(false);
         }}
       />
