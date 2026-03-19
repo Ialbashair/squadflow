@@ -76,6 +76,7 @@ export default function KanbanBoardPage() {
       <SlackSyncModal
         open={showSyncModal}
         onClose={() => setShowSyncModal(false)}
+        boardId={activeBoardId}
         onSynced={() => {
           queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] });
           setShowSyncModal(false);
