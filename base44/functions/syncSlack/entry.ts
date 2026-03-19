@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { channel_id, limit = 30 } = await req.json();
+    const { channel_id, channel_name, limit = 30 } = await req.json();
     if (!channel_id) return Response.json({ error: 'channel_id is required' }, { status: 400 });
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('slack');
