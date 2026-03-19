@@ -23,6 +23,10 @@ Deno.serve(async (req) => {
     const allUsers = await base44.asServiceRole.entities.User.list();
     const matchedUser = allUsers.find(u => u.email === email);
 
+    // Fetch board name for the email
+    const boards = await base44.asServiceRole.entities.Board.filter({ id: board_id });
+    const board = boards[0];
+
     const memberRecord = await base44.asServiceRole.entities.BoardMember.create({
       board_id,
       user_id: matchedUser?.id || null,
@@ -32,6 +36,20 @@ Deno.serve(async (req) => {
       invited_by: user.id,
       role: 'member',
       status: 'pending',
+    });
+
+    // Send invite email
+    const inviterName = user.full_name || user.email;
+    const boardName = board?.name || 'a board';
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: email,
+      subject: `${inviterName} invited you to "${boardName}" on SquadFlow`,
+      body: `
+        <p>Hi there,</p>
+        <p><strong>${inviterName}</strong> has invited you to join the board <strong>"${boardName}"</strong> on SquadFlow.</p>
+        <p>Log in to SquadFlow and check your dashboard to accept or decline the invite.</p>
+        <p>— The SquadFlow Team</p>
+      `,
     });
 
     return Response.json({ member: memberRecord });
