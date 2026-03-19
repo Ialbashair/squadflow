@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
-import { ChevronDown, LayoutDashboard, Check } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Check, X } from "lucide-react";
 
 export default function BoardSwitcher({ collapsed }) {
   const { activeBoardId, activeBoard, setActiveBoardId, user } = useAuth();
