@@ -530,6 +530,19 @@ export default function AdminView() {
               Clear Audit Log
             </button>
           </div>
+          <div className="border-t border-red-500/10 pt-3 flex items-center justify-between">
+            <div>
+              <p className="text-xs text-white/30">Disconnect Slack and wipe all synced data.</p>
+              <p className="text-[10px] text-white/20 mt-0.5">Deletes all cards and audit logs. You'll be prompted to revoke the token in the dashboard.</p>
+            </div>
+            <button
+              onClick={() => setShowDisconnectSlackModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-xs font-semibold hover:bg-red-500/30 transition-all flex-shrink-0 ml-4"
+            >
+              <Unplug className="w-3.5 h-3.5" />
+              Disconnect Slack
+            </button>
+          </div>
         </div>
       </div>
     </div>
