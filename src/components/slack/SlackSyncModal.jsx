@@ -2,70 +2,43 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Hash, Loader2, RefreshCw, Unplug } from "lucide-react";
+import { Hash, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const CONNECTOR_ID = "69bc1bbdaebca403c4460985";
-
-export default function SlackSyncModal({ open, onClose, onSynced, boardId }) {
+export default function SlackSyncModal({ open, onClose, onSynced, boardId, board }) {
   const [channels, setChannels] = useState([]);
   const [loadingChannels, setLoadingChannels] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [notConnected, setNotConnected] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const isBoardConnected = !!board?.slack_admin_user_id;
+  const connectedAdminName = board?.slack_admin_user_name;
 
   useEffect(() => {
-    if (open) {
-      setResult(null);
-      setError(null);
-      setNotConnected(false);
-      fetchChannels();
-    }
-  }, [open]);
+    if (!open) return;
+    setResult(null);
+    setError(null);
+    setSelectedChannel(null);
+
+    base44.auth.me().then(u => {
+      setCurrentUser(u);
+      if (isBoardConnected) fetchChannels();
+    }).catch(() => {});
+  }, [open, isBoardConnected]);
 
   const fetchChannels = async () => {
     setLoadingChannels(true);
     try {
       const res = await base44.functions.invoke("listSlackChannels", {});
       setChannels(res.data.channels || []);
-      setNotConnected(false);
     } catch (e) {
-      // If token missing, treat as not connected
-      if (e.message?.includes("not connected") || e.message?.includes("token") || e.message?.includes("connector")) {
-        setNotConnected(true);
-      } else {
-        setError("Failed to load channels: " + e.message);
-      }
+      setError("Failed to load channels: " + (e?.response?.data?.error || e.message));
     } finally {
       setLoadingChannels(false);
     }
-  };
-
-  const handleConnect = async () => {
-    const url = await base44.connectors.connectAppUser(CONNECTOR_ID);
-    window.open(url, "_blank");
-    // Poll briefly to detect when user has connected
-    let attempts = 0;
-    const poll = setInterval(async () => {
-      attempts++;
-      try {
-        const res = await base44.functions.invoke("listSlackChannels", {});
-        setChannels(res.data.channels || []);
-        setNotConnected(false);
-        clearInterval(poll);
-      } catch {
-        // still not connected
-      }
-      if (attempts > 20) clearInterval(poll);
-    }, 3000);
-  };
-
-  const handleDisconnect = async () => {
-    await base44.connectors.disconnectAppUser(CONNECTOR_ID);
-    setChannels([]);
-    setNotConnected(true);
   };
 
   const handleSync = async () => {
@@ -73,15 +46,21 @@ export default function SlackSyncModal({ open, onClose, onSynced, boardId }) {
     setSyncing(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke("syncSlack", { channel_id: selectedChannel.id, channel_name: selectedChannel.name, board_id: boardId });
+      const res = await base44.functions.invoke("syncSlack", {
+        channel_id: selectedChannel.id,
+        channel_name: selectedChannel.name,
+        board_id: boardId,
+      });
       setResult(res.data);
       onSynced?.();
     } catch (e) {
-      setError("Sync failed: " + e.message);
+      setError(e?.response?.data?.error || e.message || "Sync failed");
     } finally {
       setSyncing(false);
     }
   };
+
+  const iAmConnectedAdmin = currentUser?.id === board?.slack_admin_user_id;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -93,25 +72,29 @@ export default function SlackSyncModal({ open, onClose, onSynced, boardId }) {
           </DialogTitle>
         </DialogHeader>
 
-        {loadingChannels ? (
+        {/* Board not connected to Slack */}
+        {!isBoardConnected ? (
+          <div className="text-center py-6">
+            <AlertTriangle className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+            <h3 className="text-base font-semibold text-white mb-2">Slack Not Connected</h3>
+            <p className="text-sm text-white/50">
+              An admin must connect a Slack account to this board before syncing. Go to Slack Settings in the header.
+            </p>
+            <Button onClick={onClose} variant="ghost" className="mt-4 text-white/50">Close</Button>
+          </div>
+        ) : !iAmConnectedAdmin ? (
+          /* Connected but not the connected admin */
+          <div className="text-center py-6">
+            <AlertTriangle className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+            <h3 className="text-base font-semibold text-white mb-2">Wrong Slack Account</h3>
+            <p className="text-sm text-white/50">
+              Only <span className="text-white/80 font-medium">{connectedAdminName}</span> can sync this board — they connected their Slack account to it.
+            </p>
+            <Button onClick={onClose} variant="ghost" className="mt-4 text-white/50">Close</Button>
+          </div>
+        ) : loadingChannels ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
-          </div>
-        ) : notConnected ? (
-          <div className="text-center py-6">
-            <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
-              </svg>
-            </div>
-            <h3 className="text-base font-semibold text-white mb-2">Connect your Slack</h3>
-            <p className="text-sm text-white/50 mb-5">Connect your Slack account to browse your channels and sync messages into tasks.</p>
-            <Button
-              onClick={handleConnect}
-              className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 border-0 text-white w-full"
-            >
-              Connect Slack Account
-            </Button>
           </div>
         ) : result ? (
           <div className="text-center py-6">
@@ -145,13 +128,6 @@ export default function SlackSyncModal({ open, onClose, onSynced, boardId }) {
             {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
 
             <div className="flex gap-2 mt-4">
-              <button
-                onClick={handleDisconnect}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs text-white/30 hover:text-red-400 transition-colors"
-              >
-                <Unplug className="w-3.5 h-3.5" />
-                Disconnect
-              </button>
               <Button variant="ghost" onClick={onClose} className="flex-1 text-white/50 hover:text-white">Cancel</Button>
               <Button
                 onClick={handleSync}
