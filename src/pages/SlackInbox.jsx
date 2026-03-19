@@ -45,7 +45,30 @@ export default function SlackInbox() {
 
   return (
     <div>
-      <Header title="Slack Inbox" subtitle="Recent messages tagged for action" />
+      <SlackSyncModal
+        open={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        boardId={activeBoardId}
+        board={activeBoard}
+        onSynced={() => {
+          queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] });
+          setShowSyncModal(false);
+        }}
+      />
+      <SlackSettingsModal
+        open={showSlackSettings}
+        onClose={() => setShowSlackSettings(false)}
+        boardId={activeBoardId}
+        board={activeBoard}
+        onUpdated={() => setShowSlackSettings(false)}
+      />
+      <Header
+        title="Slack Inbox"
+        subtitle="Recent messages tagged for action"
+        isAdmin={isAdmin}
+        onSync={() => setShowSyncModal(true)}
+        onSlackSettings={isAdmin ? () => setShowSlackSettings(true) : undefined}
+      />
 
       {selectedTask && (
         <SlackMessageModal task={selectedTask} onClose={() => setSelectedTask(null)} />
