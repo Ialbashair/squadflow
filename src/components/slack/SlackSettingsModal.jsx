@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, Settings, CheckCircle2, Unplug, ExternalLink } from "lucide-react";
+import { Loader2, Settings, CheckCircle2, Unplug, ExternalLink, RefreshCw } from "lucide-react";
 
 const CONNECTOR_ID = "69bc1bbdaebca403c4460985";
 
@@ -12,6 +12,8 @@ export default function SlackSettingsModal({ open, onClose, boardId, board, onUp
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [connectUrl, setConnectUrl] = useState(null);
+  const [urlLoading, setUrlLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const boardSlackAdminId = board?.slack_admin_user_id;
@@ -19,39 +21,48 @@ export default function SlackSettingsModal({ open, onClose, boardId, board, onUp
   const isBoardConnected = !!boardSlackAdminId;
   const iAmTheConnectedAdmin = boardSlackAdminId === currentUser?.id;
 
+  const checkSlackConnection = useCallback(async () => {
+    try {
+      const res = await base44.functions.invoke("listSlackChannels", {});
+      return !!(res.data?.channels);
+    } catch {
+      return false;
+    }
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     setError(null);
+    setConnectUrl(null);
     setLoading(true);
 
     base44.auth.me().then(async (u) => {
       setCurrentUser(u);
-      // Check if the current user has Slack connected
-      try {
-        const res = await base44.functions.invoke("listSlackChannels", {});
-        setMySlackConnected(!!res.data?.channels);
-      } catch {
-        setMySlackConnected(false);
-      }
+      const connected = await checkSlackConnection();
+      setMySlackConnected(connected);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [open]);
 
-  const handleConnectMySlack = async () => {
-    const url = await base44.connectors.connectAppUser(CONNECTOR_ID);
-    window.open(url, "_blank");
-    // Poll to detect connection
-    let attempts = 0;
-    const poll = setInterval(async () => {
-      attempts++;
-      try {
-        const res = await base44.functions.invoke("listSlackChannels", {});
-        if (res.data?.channels) {
-          setMySlackConnected(true);
-          clearInterval(poll);
-        }
-      } catch { /* still not connected */ }
-      if (attempts > 20) clearInterval(poll);
-    }, 3000);
+  const handleGetConnectUrl = async () => {
+    setUrlLoading(true);
+    setError(null);
+    try {
+      const url = await base44.connectors.connectAppUser(CONNECTOR_ID);
+      setConnectUrl(url);
+      window.open(url, "_blank");
+    } catch (e) {
+      setError("Failed to get Slack connect URL: " + (e?.message || "Unknown error"));
+    } finally {
+      setUrlLoading(false);
+    }
+  };
+
+  const handleCheckAndRefresh = async () => {
+    setLoading(true);
+    const connected = await checkSlackConnection();
+    setMySlackConnected(connected);
+    setLoading(false);
+    if (connected) setConnectUrl(null);
   };
 
   const handleConnectToBoard = async () => {
@@ -96,6 +107,48 @@ export default function SlackSettingsModal({ open, onClose, boardId, board, onUp
           </div>
         ) : (
           <div className="space-y-4">
+            {/* My Slack account status */}
+            <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+              <p className="text-xs text-white/40 mb-2 font-medium uppercase tracking-wider">Your Slack Account</p>
+              {mySlackConnected ? (
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <p className="text-sm text-white/80">Your Slack account is connected</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-white/50">Connect your personal Slack account to enable sync.</p>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleGetConnectUrl}
+                      disabled={urlLoading}
+                      className="flex-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 border-0 text-white"
+                    >
+                      {urlLoading
+                        ? <Loader2 className="w-4 h-4 animate-spin" />
+                        : <><ExternalLink className="w-4 h-4 mr-2" />Connect Slack Account</>
+                      }
+                    </Button>
+                    {connectUrl && (
+                      <Button
+                        onClick={handleCheckAndRefresh}
+                        variant="outline"
+                        className="border-white/10 text-white/60 hover:text-white"
+                        title="Refresh connection status"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  {connectUrl && (
+                    <p className="text-xs text-white/40">
+                      After authorizing in the new tab, click <span className="text-white/70">↺</span> to refresh.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Board connection status */}
             <div className="p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
               <p className="text-xs text-white/40 mb-2 font-medium uppercase tracking-wider">Board Connection</p>
@@ -120,47 +173,29 @@ export default function SlackSettingsModal({ open, onClose, boardId, board, onUp
                   )}
                 </div>
               ) : (
-                <div>
-                  <p className="text-sm text-white/50 mb-3">No Slack account connected to this board.</p>
-                  {mySlackConnected ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-white/50">No Slack account linked to this board yet.</p>
+                  {mySlackConnected && (
                     <Button
                       onClick={handleConnectToBoard}
                       disabled={connecting}
-                      className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 border-0 text-white"
+                      className="w-full bg-emerald-600 hover:bg-emerald-500 border-0 text-white"
                     >
                       {connecting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                      Connect My Slack to This Board
+                      Use My Slack for This Board
                     </Button>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-xs text-white/40">First, connect your personal Slack account:</p>
-                      <Button
-                        onClick={handleConnectMySlack}
-                        className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 border-0 text-white"
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Connect Slack Account
-                      </Button>
-                      {mySlackConnected && (
-                        <Button
-                          onClick={handleConnectToBoard}
-                          disabled={connecting}
-                          className="w-full bg-emerald-600 hover:bg-emerald-500 border-0 text-white"
-                        >
-                          {connecting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                          Connect My Slack to This Board
-                        </Button>
-                      )}
-                    </div>
+                  )}
+                  {!mySlackConnected && (
+                    <p className="text-xs text-white/30">Connect your Slack account above first.</p>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Info box */}
+            {/* Info */}
             <div className="p-3 rounded-xl bg-violet-500/[0.06] border border-violet-500/20">
               <p className="text-xs text-violet-300/70 leading-relaxed">
-                Only one Slack account can be connected per board at a time. Once connected, board admins can sync any channel from that account. Only the admin who connected Slack can disconnect it.
+                One Slack account per board. The connected admin can sync any channel. Only they can disconnect it.
               </p>
             </div>
 
