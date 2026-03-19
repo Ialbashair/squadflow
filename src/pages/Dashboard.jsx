@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, LayoutDashboard, Loader2, ChevronRight, Check, X, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
 import CreateBoardModal from "@/components/boards/CreateBoardModal";
 
 function MemberAvatars({ boardId, allMembers }) {
