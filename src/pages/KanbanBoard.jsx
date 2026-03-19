@@ -82,8 +82,8 @@ export default function KanbanBoardPage() {
         }}
       />
       <Header
-        title="Kanban Board"
-        subtitle={`${tasks.length} items from Slack`}
+        title={activeBoard?.name || "Kanban Board"}
+        subtitle={`${tasks.length} items`}
         onSync={handleSync}
         isSyncing={isSyncing}
         isAdmin={isAdminOnly}
