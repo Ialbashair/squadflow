@@ -18,6 +18,7 @@ export default function KanbanBoardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminOnly, setIsAdminOnly] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
+  const [showSlackSettings, setShowSlackSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
