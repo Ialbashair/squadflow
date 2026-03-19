@@ -95,6 +95,7 @@ export default function CardsView() {
         onSync={handleSync}
         isSyncing={isSyncing}
         isAdmin={isAdmin}
+        onSlackSettings={isAdmin ? () => setShowSlackSettings(true) : undefined}
       />
       <StatsBar tasks={tasks} />
       <KanbanBoard tasks={tasks} onDragEnd={isAdmin ? handleDragEnd : () => {}} isAdmin={isAdmin} />
