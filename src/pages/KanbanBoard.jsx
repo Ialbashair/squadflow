@@ -79,9 +79,20 @@ export default function KanbanBoardPage() {
         open={showSyncModal}
         onClose={() => setShowSyncModal(false)}
         boardId={activeBoardId}
+        board={activeBoard}
         onSynced={() => {
           queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] });
           setShowSyncModal(false);
+        }}
+      />
+      <SlackSettingsModal
+        open={showSlackSettings}
+        onClose={() => setShowSlackSettings(false)}
+        boardId={activeBoardId}
+        board={activeBoard}
+        onUpdated={() => {
+          queryClient.invalidateQueries({ queryKey: ["board", activeBoardId] });
+          setShowSlackSettings(false);
         }}
       />
       <Header
