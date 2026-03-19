@@ -11,7 +11,8 @@ import { logTaskMoved } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
 export default function KanbanBoardPage() {
-  const { getEffectiveUser } = useAuth();
+  const { getEffectiveUser, activeBoardId, activeBoard } = useAuth();
+  const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAdminOnly, setIsAdminOnly] = useState(false);
