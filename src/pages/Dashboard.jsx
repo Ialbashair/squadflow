@@ -194,10 +194,10 @@ export default function Dashboard() {
         {boards.map(board => {
           const isAdmin = roleByBoard[board.id] === "admin";
           return (
-            <Link
+            <button
               key={board.id}
-              to={`/board/${board.id}`}
-              className="group relative flex flex-col p-5 rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-violet-500/30 hover:bg-violet-500/[0.04] transition-all duration-200"
+              onClick={() => { setActiveBoardId(board.id, board); navigate("/KanbanBoard"); }}
+              className="group relative flex flex-col p-5 rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-violet-500/30 hover:bg-violet-500/[0.04] transition-all duration-200 text-left"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30 flex items-center justify-center">
@@ -220,7 +220,7 @@ export default function Dashboard() {
                 <MemberAvatars boardId={board.id} allMembers={allMembers} />
                 <ChevronRight className="w-3.5 h-3.5 text-white/20 ml-auto group-hover:text-violet-400 transition-colors" />
               </div>
-            </Link>
+            </button>
           );
         })}
 
