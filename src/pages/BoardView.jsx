@@ -183,13 +183,22 @@ export default function BoardView() {
             Members
           </button>
           {isAdmin && (
-            <button
-              onClick={() => setShowSync(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold transition-all shadow-lg shadow-violet-500/20"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Sync from Slack
-            </button>
+            <>
+              <button
+                onClick={() => setShowSlackSettings(true)}
+                title="Slack Settings"
+                className="p-2.5 rounded-xl text-white/30 hover:text-violet-400 hover:bg-white/[0.04] border border-white/[0.08] transition-all"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setShowSync(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold transition-all shadow-lg shadow-violet-500/20"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Sync from Slack
+              </button>
+            </>
           )}
         </div>
       </div>
