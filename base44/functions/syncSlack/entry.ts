@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
+const CONNECTOR_ID = "69bc1bbdaebca403c4460985";
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -8,8 +10,23 @@ Deno.serve(async (req) => {
 
     const { channel_id, channel_name, limit = 30, board_id } = await req.json();
     if (!channel_id) return Response.json({ error: 'channel_id is required' }, { status: 400 });
+    if (!board_id) return Response.json({ error: 'board_id is required' }, { status: 400 });
 
-    const accessToken = await base44.connectors.getCurrentAppUserAccessToken('69bc1bbdaebca403c4460985');
+    // Only board admins can sync
+    const members = await base44.entities.BoardMember.filter({ board_id, user_id: user.id, status: 'active' });
+    const membership = members[0];
+    if (!membership || membership.role !== 'admin') {
+      return Response.json({ error: 'Only board admins can sync Slack' }, { status: 403 });
+    }
+
+    // Get the board's connected admin token
+    const boards = await base44.asServiceRole.entities.Board.filter({ id: board_id });
+    const board = boards[0];
+    if (!board?.slack_admin_user_id) {
+      return Response.json({ error: 'Slack is not connected to this board. An admin must connect Slack first.' }, { status: 400 });
+    }
+
+    const accessToken = await base44.asServiceRole.connectors.getAppUserAccessToken(CONNECTOR_ID, board.slack_admin_user_id);
 
     // Fetch channel history
     const historyRes = await fetch(
@@ -86,13 +103,10 @@ Each task object:
 
     const extractedTasks = aiResult?.tasks || [];
 
-    // Get first column of the board (if board_id provided)
-    let firstColumnId = null;
-    if (board_id) {
-      const columns = await base44.asServiceRole.entities.Column.filter({ board_id });
-      const sorted = columns.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-      firstColumnId = sorted[0]?.id || null;
-    }
+    // Get first column of the board
+    const columns = await base44.asServiceRole.entities.Column.filter({ board_id });
+    const sorted = columns.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    const firstColumnId = sorted[0]?.id || null;
 
     // Fetch author info and create tasks
     let createdCount = 0;
@@ -103,7 +117,7 @@ Each task object:
       const authorInfo = msg.user ? await getUserInfo(msg.user) : null;
 
       await base44.asServiceRole.entities.Task.create({
-        board_id: board_id || null,
+        board_id,
         column_id: firstColumnId || null,
         title: task.title,
         description: msg.text,
