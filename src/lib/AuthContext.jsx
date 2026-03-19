@@ -13,6 +13,15 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
   const [roleOverride, setRoleOverride] = useState(null); // For viewing app as different role
+  const [activeBoardId, setActiveBoardIdState] = useState(() => localStorage.getItem('squadflow_active_board') || null);
+  const [activeBoard, setActiveBoard] = useState(null);
+
+  const setActiveBoardId = (id, board) => {
+    setActiveBoardIdState(id);
+    setActiveBoard(board || null);
+    if (id) localStorage.setItem('squadflow_active_board', id);
+    else localStorage.removeItem('squadflow_active_board');
+  };
 
   useEffect(() => {
     checkAppState();
