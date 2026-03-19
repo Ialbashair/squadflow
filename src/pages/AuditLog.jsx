@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, AlertTriangle, ShieldCheck, ArrowRight, Plus, Pencil, Trash2, MoveRight, X } from "lucide-react";
 import { formatDistanceToNow, format, isWithinInterval, startOfDay, endOfDay } from "date-fns";
