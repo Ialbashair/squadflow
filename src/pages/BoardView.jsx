@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import BoardTaskCard from "@/components/boards/BoardTaskCard";
 import BoardTaskModal from "@/components/boards/BoardTaskModal";
 import SlackSyncModal from "@/components/slack/SlackSyncModal";
+import SlackSettingsModal from "@/components/slack/SlackSettingsModal";
 import MembersModal from "@/components/boards/MembersModal";
 
 export default function BoardView() {
