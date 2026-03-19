@@ -7,6 +7,7 @@ import Header from "@/components/header/Header";
 import WorkflowStatsBar from "@/components/stats/WorkflowStatsBar";
 import WorkflowBoard from "@/components/kanban/WorkflowBoard";
 import SlackSyncModal from "@/components/slack/SlackSyncModal";
+import SlackSettingsModal from "@/components/slack/SlackSettingsModal";
 import { logTaskMoved } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
