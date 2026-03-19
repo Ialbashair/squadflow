@@ -132,11 +132,22 @@ export default function BoardView() {
       <SlackSyncModal
         open={showSync}
         onClose={() => setShowSync(false)}
+        boardId={boardId}
+        board={board}
         onSynced={() => {
           queryClient.invalidateQueries({ queryKey: ["board-tasks", boardId] });
           setShowSync(false);
         }}
+      />
+      <SlackSettingsModal
+        open={showSlackSettings}
+        onClose={() => setShowSlackSettings(false)}
         boardId={boardId}
+        board={board}
+        onUpdated={() => {
+          queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+          setShowSlackSettings(false);
+        }}
       />
 
       {selectedTask && (
