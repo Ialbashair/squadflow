@@ -174,7 +174,9 @@ export default function AuditLogPage() {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Audit Log</h2>
-          <p className="text-sm text-white/30 mt-0.5">{filteredLogs.length} of {logs.length} actions</p>
+          <p className="text-sm text-white/30 mt-0.5">
+            {activeBoard ? `${activeBoard.name} · ` : "All boards · "}{filteredLogs.length} of {logs.length} actions
+          </p>
         </div>
       </div>
 
