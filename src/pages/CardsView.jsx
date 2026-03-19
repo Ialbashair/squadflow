@@ -39,7 +39,7 @@ export default function CardsView() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Task.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] }),
   });
 
   const handleDragEnd = (result) => {
