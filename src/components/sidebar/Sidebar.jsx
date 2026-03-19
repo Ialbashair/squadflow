@@ -94,9 +94,15 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
             )}
           </div>
 
+        {/* Board Switcher */}
+        <BoardSwitcher collapsed={!isMobile && collapsed} />
+
         {/* Nav */}
         <nav className="flex-1 py-4 px-3 space-y-1">
           {navItems.map(item => {
+            // Hide board-specific pages when no board is selected
+            const boardPages = ["KanbanBoard", "CardsView", "SlackInbox"];
+            if (boardPages.includes(item.page) && !activeBoardId) return null;
             const isActive = location.pathname.includes(item.page) ||
               (item.page === "Dashboard" && location.pathname === "/") ||
               (item.page === "KanbanBoard" && location.pathname === "/KanbanBoard");
