@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { channel_id, channel_name, limit = 30 } = await req.json();
+    const { channel_id, channel_name, limit = 30, board_id } = await req.json();
     if (!channel_id) return Response.json({ error: 'channel_id is required' }, { status: 400 });
 
     const accessToken = await base44.connectors.getCurrentAppUserAccessToken('69bc1bbdaebca403c4460985');
@@ -86,6 +86,14 @@ Each task object:
 
     const extractedTasks = aiResult?.tasks || [];
 
+    // Get first column of the board (if board_id provided)
+    let firstColumnId = null;
+    if (board_id) {
+      const columns = await base44.asServiceRole.entities.Column.filter({ board_id });
+      const sorted = columns.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+      firstColumnId = sorted[0]?.id || null;
+    }
+
     // Fetch author info and create tasks
     let createdCount = 0;
     for (const task of extractedTasks) {
@@ -95,6 +103,8 @@ Each task object:
       const authorInfo = msg.user ? await getUserInfo(msg.user) : null;
 
       await base44.asServiceRole.entities.Task.create({
+        board_id: board_id || null,
+        column_id: firstColumnId || null,
         title: task.title,
         description: msg.text,
         type: task.type || 'task',
@@ -105,6 +115,7 @@ Each task object:
         slack_author: authorInfo?.name || msg.username || 'Unknown',
         slack_avatar: authorInfo?.avatar || '',
         slack_message_ts: msg.ts || '',
+        position: 0,
         order: 0
       });
       createdCount++;
