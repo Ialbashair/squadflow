@@ -79,8 +79,8 @@ export default function CardsView() {
         }}
       />
       <Header
-        title="Cards View"
-        subtitle={`${tasks.length} items from Slack`}
+        title={activeBoard?.name || "Cards View"}
+        subtitle={`${tasks.length} items`}
         onSync={handleSync}
         isSyncing={isSyncing}
         isAdmin={isAdmin}
