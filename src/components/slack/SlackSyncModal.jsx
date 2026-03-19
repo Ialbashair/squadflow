@@ -38,7 +38,7 @@ export default function SlackSyncModal({ open, onClose, onSynced }) {
     setSyncing(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke("syncSlack", { channel_id: selectedChannel.id });
+      const res = await base44.functions.invoke("syncSlack", { channel_id: selectedChannel.id, channel_name: selectedChannel.name });
       setResult(res.data);
       onSynced?.();
     } catch (e) {
