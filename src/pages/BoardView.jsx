@@ -19,6 +19,7 @@ export default function BoardView() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showSync, setShowSync] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
+  const [showSlackSettings, setShowSlackSettings] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
