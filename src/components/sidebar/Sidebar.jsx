@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { cn } from "@/lib/utils";
-import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck, AlertCircle } from "lucide-react";
+import { Inbox, LayoutDashboard, LayoutGrid, Zap, ChevronLeft, ChevronRight, X, Settings, ShieldCheck, AlertCircle, Home } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const navItems = [
-  { label: "Kanban Board", icon: LayoutDashboard, page: "KanbanBoard" },
-  { label: "Cards View",   icon: LayoutGrid,      page: "CardsView" },
-  { label: "Slack Inbox",  icon: Inbox,           page: "SlackInbox" },
+  { label: "My Boards",    icon: Home,            page: "Dashboard",    path: "/Dashboard" },
+  { label: "Kanban Board", icon: LayoutDashboard, page: "KanbanBoard",  path: "/KanbanBoard" },
+  { label: "Cards View",   icon: LayoutGrid,      page: "CardsView",    path: "/CardsView" },
+  { label: "Slack Inbox",  icon: Inbox,           page: "SlackInbox",   path: "/SlackInbox" },
 ];
 
 export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onMobileClose }) {
@@ -96,11 +97,12 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onM
         <nav className="flex-1 py-4 px-3 space-y-1">
           {navItems.map(item => {
             const isActive = location.pathname.includes(item.page) ||
-              (item.page === "KanbanBoard" && location.pathname === "/");
+              (item.page === "Dashboard" && location.pathname === "/") ||
+              (item.page === "KanbanBoard" && location.pathname === "/KanbanBoard");
             return (
               <Link
                 key={item.page}
-                to={createPageUrl(item.page)}
+                to={item.path || createPageUrl(item.page)}
                 onClick={isMobile ? onMobileClose : undefined}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
