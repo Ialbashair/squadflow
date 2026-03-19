@@ -267,9 +267,11 @@ export default function AdminView() {
             </div>
             <h3 className="text-base font-bold text-white mb-2">{successMessage}</h3>
             <p className="text-sm text-white/40 mb-5">
-              {successMessage === "All Cards Deleted" 
+            {successMessage === "All Cards Deleted"
                 ? "The Kanban board has been successfully reset."
-                : "The Audit Log has been successfully cleared."}
+                : successMessage === "Audit Log Cleared"
+                ? "The Audit Log has been successfully cleared."
+                : "All cards and audit logs have been wiped. Go to Dashboard → Integrations to finish disconnecting Slack."}
             </p>
             <button
               onClick={() => setShowSuccessModal(false)}
