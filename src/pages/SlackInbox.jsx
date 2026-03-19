@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import SlackMessageModal from "@/components/slack/SlackMessageModal";
 import { Badge } from "@/components/ui/badge";
