@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { accessToken } = await base44.asServiceRole.connectors.getConnection('slack');
+    const accessToken = await base44.connectors.getCurrentAppUserAccessToken('69bc1bbdaebca403c4460985');
 
     const res = await fetch(
       'https://slack.com/api/conversations.list?types=public_channel&exclude_archived=true&limit=200',

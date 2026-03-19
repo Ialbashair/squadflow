@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
     const { channel_id, channel_name, limit = 30 } = await req.json();
     if (!channel_id) return Response.json({ error: 'channel_id is required' }, { status: 400 });
 
-    const { accessToken } = await base44.asServiceRole.connectors.getConnection('slack');
+    const accessToken = await base44.connectors.getCurrentAppUserAccessToken('69bc1bbdaebca403c4460985');
 
     // Fetch channel history
     const historyRes = await fetch(
