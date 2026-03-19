@@ -32,6 +32,8 @@ function MemberAvatars({ boardId, allMembers }) {
 }
 
 export default function Dashboard() {
+  const { setActiveBoardId } = useAuth();
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const queryClient = useQueryClient();
