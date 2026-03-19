@@ -73,6 +73,7 @@ export default function CardsView() {
       <SlackSyncModal
         open={showSyncModal}
         onClose={() => setShowSyncModal(false)}
+        boardId={activeBoardId}
         onSynced={() => {
           queryClient.invalidateQueries({ queryKey: ["tasks", activeBoardId] });
           setShowSyncModal(false);
