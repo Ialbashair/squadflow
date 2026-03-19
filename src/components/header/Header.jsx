@@ -26,19 +26,30 @@ export default function Header({ title, subtitle, onSync, isSyncing, isAdmin, on
             <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-violet-400 rounded-full" />
           </button>
           {isAdmin === true && (
-            <Button
-              onClick={onSync}
-              disabled={isSyncing}
-              className={cn(
-                "ml-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
-                "text-white text-sm font-medium rounded-xl px-5 h-10",
-                "shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30",
-                "transition-all duration-200 border-0"
+            <div className="flex items-center gap-2 ml-2">
+              {onSlackSettings && (
+                <button
+                  onClick={onSlackSettings}
+                  title="Slack Settings"
+                  className="p-2.5 rounded-xl text-white/30 hover:text-violet-400 hover:bg-white/[0.04] transition-all"
+                >
+                  <Settings2 className="w-4 h-4" />
+                </button>
               )}
-            >
-              <RefreshCw className={cn("w-4 h-4 mr-2", isSyncing && "animate-spin")} />
-              {isSyncing ? "Syncing..." : "Sync with Slack"}
-            </Button>
+              <Button
+                onClick={onSync}
+                disabled={isSyncing}
+                className={cn(
+                  "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500",
+                  "text-white text-sm font-medium rounded-xl px-5 h-10",
+                  "shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30",
+                  "transition-all duration-200 border-0"
+                )}
+              >
+                <RefreshCw className={cn("w-4 h-4 mr-2", isSyncing && "animate-spin")} />
+                {isSyncing ? "Syncing..." : "Sync with Slack"}
+              </Button>
+            </div>
           )}
         </div>
       </header>
