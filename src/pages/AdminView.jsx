@@ -165,6 +165,7 @@ export default function AdminView() {
   const [copied, setCopied] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showClearAuditModal, setShowClearAuditModal] = useState(false);
+  const [showDisconnectSlackModal, setShowDisconnectSlackModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("All Cards Deleted");
   const [viewAsRole, setViewAsRole] = useState(roleOverride);
