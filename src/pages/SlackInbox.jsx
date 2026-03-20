@@ -19,19 +19,14 @@ const typeConfig = {
 };
 
 export default function SlackInbox() {
-  const { activeBoardId, activeBoard } = useAuth();
+  const { activeBoardId, activeBoard, getEffectiveUser } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [selectedTask, setSelectedTask] = useState(null);
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [showSlackSettings, setShowSlackSettings] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    base44.auth.me().then(u => {
-      setIsAdmin(u?.role === "admin");
-    }).catch(() => {});
-  }, []);
+  const isAdmin = getEffectiveUser()?.role === "admin";
 
   useEffect(() => {
     if (!activeBoardId) navigate("/");
