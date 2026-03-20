@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Loader2, Settings, CheckCircle2, Unplug, ExternalLink, RefreshCw } from "lucide-react";
 
-const CONNECTOR_ID = "69bc1bbdaebca403c4460985";
+const CONNECTOR_ID = "69bd8b784da42b12ff3f7786";
 
 export default function SlackSettingsModal({ open, onClose, boardId, board, onUpdated }) {
   const [currentUser, setCurrentUser] = useState(null);
