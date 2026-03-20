@@ -16,14 +16,10 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onToggle, mobileOpen, isMobile, onMobileClose }) {
   const location = useLocation();
-  const { roleOverride, setRoleOverride, activeBoardId } = useAuth();
-  const [userRole, setUserRole] = useState(null);
+  const { roleOverride, setRoleOverride, activeBoardId, getEffectiveUser } = useAuth();
 
-  useEffect(() => {
-    base44.auth.me().then(u => setUserRole(u?.role)).catch(() => {});
-  }, []);
-
-  const effectiveRole = roleOverride || userRole;
+  const effectiveUser = getEffectiveUser();
+  const effectiveRole = effectiveUser?.role || 'user';
   const isAdmin = effectiveRole === "admin";
   const isTeamLead = effectiveRole === "team_lead";
 
