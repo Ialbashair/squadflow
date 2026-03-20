@@ -230,7 +230,7 @@ export default function AdminView() {
     const newRole = pendingRoles[user.id];
     if (!newRole) return;
     setSaving(prev => ({ ...prev, [user.id]: true }));
-    await base44.entities.User.update(user.id, { role: newRole });
+    await base44.entities.AppUser.update(user.id, { role: newRole });
     setUsers(prev => prev.map(u => u.id === user.id ? { ...u, role: newRole } : u));
     setPendingRoles(prev => { const n = { ...prev }; delete n[user.id]; return n; });
     setSaving(prev => { const n = { ...prev }; delete n[user.id]; return n; });
