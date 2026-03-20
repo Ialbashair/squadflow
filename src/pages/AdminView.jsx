@@ -183,17 +183,19 @@ export default function AdminView() {
   };
 
   useEffect(() => {
-    base44.auth.me().then(me => {
+    base44.auth.me().then(async (me) => {
       setCurrentUser(me);
-      if (me?.role !== "admin") {
+      // Check role via AppUser entity
+      const myAppUsers = await base44.entities.AppUser.filter({ user_id: me?.id });
+      const myAppUser = myAppUsers[0];
+      if (myAppUser?.role !== "admin") {
         setNotAdmin(true);
         setLoading(false);
         return;
       }
-      return base44.entities.User.list().then(all => {
-        setUsers(all);
-        setLoading(false);
-      });
+      const all = await base44.entities.AppUser.list();
+      setUsers(all);
+      setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
