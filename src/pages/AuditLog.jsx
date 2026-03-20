@@ -93,31 +93,21 @@ function LogEntry({ log }) {
 }
 
 export default function AuditLogPage() {
-  const { activeBoardId, activeBoard } = useAuth();
-  const [currentUser, setCurrentUser] = useState(null);
-  const [notAuthorized, setNotAuthorized] = useState(false);
-  const [loadingUser, setLoadingUser] = useState(true);
+  const { activeBoardId, activeBoard, getEffectiveUser } = useAuth();
+  const effectiveUser = getEffectiveUser();
+  const effectiveRole = effectiveUser?.role || "user";
+  const notAuthorized = effectiveRole !== "admin" && effectiveRole !== "team_lead";
   const [searchQuery, setSearchQuery] = useState("");
   const [userFilter, setUserFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-
-  useEffect(() => {
-    base44.auth.me().then(u => {
-      setCurrentUser(u);
-      if (u?.role !== "admin" && u?.role !== "team_lead") {
-        setNotAuthorized(true);
-      }
-      setLoadingUser(false);
-    }).catch(() => setLoadingUser(false));
-  }, []);
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ["audit-logs", activeBoardId],
     queryFn: () => activeBoardId
       ? base44.entities.AuditLog.filter({ board_id: activeBoardId }, "-created_date", 500)
       : base44.entities.AuditLog.list("-created_date", 500),
-    enabled: !notAuthorized && !loadingUser,
+    enabled: !notAuthorized,
   });
 
   const filteredLogs = useMemo(() => {
@@ -146,7 +136,7 @@ export default function AuditLogPage() {
     });
   }, [logs, searchQuery, userFilter, dateFrom, dateTo]);
 
-  if (loadingUser || isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />

@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { User, Mail, Shield, LogOut, Save, Loader2 } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, getEffectiveUser } = useAuth();
   const [saving, setSaving] = useState(false);
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState(user?.full_name || "");
   const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    base44.auth.me().then((u) => {
-      setUser(u);
-      setFullName(u.full_name || "");
-      setLoading(false);
-    });
-  }, []);
 
   const handleSave = async () => {
     setSaving(true);
@@ -31,15 +23,7 @@ export default function Profile() {
     base44.auth.logout();
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
-      </div>
-    );
-  }
-
-  const role = user?.role ?? "user";
+  const role = getEffectiveUser()?.role ?? "user";
   const roleDisplay = role === "admin" ? { label: "Admin", cls: "bg-violet-500/20 text-violet-300 border-violet-500/30" }
     : role === "team_lead" ? { label: "Team Lead", cls: "bg-amber-500/20 text-amber-300 border-amber-500/30" }
     : { label: "Team Member", cls: "bg-slate-500/20 text-slate-400 border-slate-500/30" };

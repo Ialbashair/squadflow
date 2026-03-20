@@ -12,21 +12,16 @@ import { logTaskMoved } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
 export default function KanbanBoardPage() {
-  const { getEffectiveUser, activeBoardId, activeBoard } = useAuth();
+  const { getEffectiveUser, activeBoardId, activeBoard, user: currentUser, appUser } = useAuth();
   const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [showSlackSettings, setShowSlackSettings] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
   const effectiveRole = getEffectiveUser()?.role || 'user';
   const isAdmin = effectiveRole === "admin" || effectiveRole === "team_lead";
   const isAdminOnly = effectiveRole === "admin";
-
-  useEffect(() => {
-    base44.auth.me().then(u => setCurrentUser(u)).catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (!activeBoardId) navigate("/");
@@ -53,7 +48,7 @@ export default function KanbanBoardPage() {
       data: { status: destination.droppableId, order: destination.index },
     });
     if (task && destination.droppableId !== source.droppableId) {
-      logTaskMoved({ task, fromStatus: source.droppableId, toStatus: destination.droppableId, user: currentUser });
+      logTaskMoved({ task, fromStatus: source.droppableId, toStatus: destination.droppableId, user: currentUser, appUser });
     }
   };
 

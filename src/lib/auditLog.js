@@ -14,14 +14,14 @@ const TYPE_LABELS = {
   feature: "Feature",
 };
 
-export async function logTaskMoved({ task, fromStatus, toStatus, user }) {
+export async function logTaskMoved({ task, fromStatus, toStatus, user, appUser }) {
   const from = STATUS_LABELS[fromStatus] || fromStatus;
   const to = STATUS_LABELS[toStatus] || toStatus;
   await base44.entities.AuditLog.create({
     board_id: task.board_id || null,
     user_name: user?.full_name || user?.email || "Unknown",
     user_email: user?.email || "",
-    user_role: user?.role || "user",
+    user_role: appUser?.role || "user",
     action_type: "moved",
     task_title: task.title,
     task_id: task.id,
@@ -32,14 +32,14 @@ export async function logTaskMoved({ task, fromStatus, toStatus, user }) {
   });
 }
 
-export async function logTaskTypeChanged({ task, fromType, toType, user }) {
+export async function logTaskTypeChanged({ task, fromType, toType, user, appUser }) {
   const from = TYPE_LABELS[fromType] || fromType;
   const to = TYPE_LABELS[toType] || toType;
   await base44.entities.AuditLog.create({
     board_id: task.board_id || null,
     user_name: user?.full_name || user?.email || "Unknown",
     user_email: user?.email || "",
-    user_role: user?.role || "user",
+    user_role: appUser?.role || "user",
     action_type: "moved",
     task_title: task.title,
     task_id: task.id,

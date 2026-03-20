@@ -4,8 +4,10 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!user || user.role !== 'admin') {
+    const appUsers = await base44.asServiceRole.entities.AppUser.filter({ user_id: user.id });
+    if (appUsers[0]?.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 

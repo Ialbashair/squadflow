@@ -19,9 +19,9 @@ Deno.serve(async (req) => {
     const activeOrPending = existing.find(m => m.status === 'active' || m.status === 'pending');
     if (activeOrPending) return Response.json({ error: 'This email is already invited or a member' }, { status: 409 });
 
-    // Look up existing user by email
-    const allUsers = await base44.asServiceRole.entities.User.list();
-    const matchedUser = allUsers.find(u => u.email === email);
+    // Look up existing user by email in AppUser entity
+    const matchedUsers = await base44.asServiceRole.entities.AppUser.filter({ email });
+    const matchedUser = matchedUsers[0] || null;
 
     // Fetch board name for the email
     const boards = await base44.asServiceRole.entities.Board.filter({ id: board_id });

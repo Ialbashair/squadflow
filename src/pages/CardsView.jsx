@@ -12,20 +12,15 @@ import { logTaskTypeChanged } from "@/lib/auditLog";
 import { Loader2 } from "lucide-react";
 
 export default function CardsView() {
-  const { activeBoardId, activeBoard, getEffectiveUser } = useAuth();
+  const { activeBoardId, activeBoard, getEffectiveUser, user: currentUser, appUser } = useAuth();
   const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [showSlackSettings, setShowSlackSettings] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
   const effectiveRole = getEffectiveUser()?.role || 'user';
   const isAdmin = effectiveRole === "admin" || effectiveRole === "team_lead";
-
-  useEffect(() => {
-    base44.auth.me().then(u => setCurrentUser(u)).catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (!activeBoardId) navigate("/");
@@ -52,7 +47,7 @@ export default function CardsView() {
       data: { type: destination.droppableId, order: destination.index },
     });
     if (task && destination.droppableId !== source.droppableId) {
-      logTaskTypeChanged({ task, fromType: source.droppableId, toType: destination.droppableId, user: currentUser });
+      logTaskTypeChanged({ task, fromType: source.droppableId, toType: destination.droppableId, user: currentUser, appUser });
     }
   };
 
