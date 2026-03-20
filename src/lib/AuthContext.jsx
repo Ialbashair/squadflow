@@ -106,7 +106,9 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
-      setIsLoadingAuth(false);
+      // Load or create the AppUser entity record for role management
+      const au = await getOrCreateAppUser();
+      setAppUser(au);
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
