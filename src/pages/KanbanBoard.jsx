@@ -15,22 +15,18 @@ export default function KanbanBoardPage() {
   const { getEffectiveUser, activeBoardId, activeBoard } = useAuth();
   const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isAdminOnly, setIsAdminOnly] = useState(false);
   const [showSyncModal, setShowSyncModal] = useState(false);
   const [showSlackSettings, setShowSlackSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
 
+  const effectiveRole = getEffectiveUser()?.role || 'user';
+  const isAdmin = effectiveRole === "admin" || effectiveRole === "team_lead";
+  const isAdminOnly = effectiveRole === "admin";
+
   useEffect(() => {
-    base44.auth.me().then(u => {
-      setCurrentUser(u);
-      const effectiveUser = getEffectiveUser();
-      const role = effectiveUser?.role;
-      setIsAdmin(role === "admin" || role === "team_lead");
-      setIsAdminOnly(role === "admin");
-    }).catch(() => {});
-  }, [getEffectiveUser]);
+    base44.auth.me().then(u => setCurrentUser(u)).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!activeBoardId) navigate("/");
