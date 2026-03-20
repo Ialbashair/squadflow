@@ -143,8 +143,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getEffectiveUser = () => {
-    if (!user || !roleOverride) return user;
-    return { ...user, role: roleOverride };
+    const role = roleOverride || appUser?.role || 'user';
+    if (!user) return user;
+    return { ...user, role };
   };
 
   return (
