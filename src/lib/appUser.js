@@ -4,8 +4,8 @@ import { base44 } from '@/api/base44Client';
  * Get or create the AppUser record for the currently authenticated user.
  * Returns the AppUser entity record (with role, user_id, email, full_name).
  */
-export async function getOrCreateAppUser() {
-  const authUser = await base44.auth.me();
+export async function getOrCreateAppUser(authUser) {
+  if (!authUser) authUser = await base44.auth.me();
   if (!authUser) return null;
 
   const existing = await base44.entities.AppUser.filter({ user_id: authUser.id });

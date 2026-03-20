@@ -107,8 +107,9 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setIsAuthenticated(true);
       // Load or create the AppUser entity record for role management
-      const au = await getOrCreateAppUser();
+      const au = await getOrCreateAppUser(currentUser);
       setAppUser(au);
+      setIsLoadingAuth(false);
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
