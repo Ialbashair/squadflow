@@ -101,21 +101,22 @@ export const AuthProvider = ({ children }) => {
 
   const checkUserAuth = async () => {
     try {
-      // Now check if the user is authenticated
       setIsLoadingAuth(true);
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
-      // Load or create the AppUser entity record for role management
-      const au = await getOrCreateAppUser(currentUser);
-      setAppUser(au);
+      // Load or create the AppUser entity record — isolated so failure doesn't break auth
+      try {
+        const au = await getOrCreateAppUser(currentUser);
+        setAppUser(au);
+      } catch (appUserError) {
+        console.warn('AppUser load failed, continuing without role:', appUserError);
+      }
       setIsLoadingAuth(false);
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
-      
-      // If user auth fails, it might be an expired token
       if (error.status === 401 || error.status === 403) {
         setAuthError({
           type: 'auth_required',
