@@ -389,7 +389,7 @@ export default function AdminView() {
           const effectiveRole = pendingRoles[u.id] ?? u.role ?? "user";
           const roleConfig = RoleConfig(effectiveRole);
           const isDirty = pendingRoles[u.id] !== undefined;
-          const isMe = u.id === currentUser?.id;
+          const isMe = u.user_id === currentUser?.id;
 
           return (
             <div
