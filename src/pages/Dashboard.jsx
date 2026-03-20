@@ -32,15 +32,10 @@ function MemberAvatars({ boardId, allMembers }) {
 }
 
 export default function Dashboard() {
-  const { setActiveBoardId } = useAuth();
+  const { setActiveBoardId, user: currentUser } = useAuth();
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    base44.auth.me().then(setCurrentUser).catch(() => {});
-  }, []);
 
   // All memberships for current user (active boards)
   const { data: memberships = [], isLoading } = useQuery({
